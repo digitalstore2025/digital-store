@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة بناء الكلمات - Sky Learning ✈️</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .game-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .word-display {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #1e3a8a;
+      padding: 2rem;
+      margin: 2rem 0;
+      min-height: 100px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.5rem;
+      text-align: center;
+    }
+
+    .target-word-hint {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .hint-emoji {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .letters-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .letter-btn {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: #1f2937;
+      border: none;
+      padding: 1.5rem;
+      border-radius: 12px;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .letter-btn:hover:not(:disabled) {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .letter-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .game-controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reset-btn {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+    }
+
+    .hint-btn {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      color: white;
+      display: none;
+    }
+
+    .score-board {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .score-item {
+      padding: 0.5rem;
+    }
+
+    .score-value {
+      font-size: 2rem;
+      font-weight: bold;
+      display: block;
+    }
+
+    .score-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      margin: 2rem 0;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .level-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .level-easy { background: #4ade80; color: white; }
+    .level-medium { background: #fbbf24; color: #1f2937; }
+    .level-hard { background: #ef4444; color: white; }
+  </style>
+</head>
+<body>
+  <!-- Sky Background -->
+  <div class="sky-background">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <span class="plane-icon">✈️</span>
+        <span>Sky Learning</span>
+      </div>
+      <nav>
+        <a href="../../index.html">الرئيسية</a>
+        <a href="../../index.html#journeys">الرحلات</a>
+        <a href="../../index.html#games">الألعاب</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Game Container -->
+  <div class="game-container">
+    <h1 style="text-align: center; color: #1e3a8a; margin-bottom: 1rem;">
+      🔤 لعبة بناء الكلمات
+    </h1>
+    <p style="text-align: center; color: #6b7280; margin-bottom: 2rem; font-size: 1.1rem;">
+      رتب الحروف لتكوين الكلمة الصحيحة!
+    </p>
+
+    <!-- Score Board -->
+    <div class="score-board">
+      <div class="score-item">
+        <span class="score-value" id="score">0</span>
+        <span class="score-label">النقاط</span>
+      </div>
+      <div class="score-item">
+        <span class="score-value" id="level">1</span>
+        <span class="score-label">المستوى</span>
+      </div>
+      <div class="score-item">
+        <span class="score-value" id="streak">0</span>
+        <span class="score-label">التتالي</span>
+      </div>
+    </div>
+
+    <!-- Level Badge -->
+    <div style="text-align: center; margin-bottom: 1rem;">
+      <span class="level-badge level-easy" id="difficulty-badge">سهل</span>
+    </div>
+
+    <!-- Target Word Hint -->
+    <div class="target-word-hint">
+      <span class="hint-emoji" id="word-emoji">✈️</span>
+      <div style="font-size: 1.2rem; color: #1e3a8a;" id="word-meaning">طائرة</div>
+    </div>
+
+    <!-- Word Display -->
+    <div class="word-display" id="word-display">
+      _____
+    </div>
+
+    <!-- Letters Container -->
+    <div class="letters-container" id="letters-container">
+      <!-- Letters will be added dynamically -->
+    </div>
+
+    <!-- Game Controls -->
+    <div class="game-controls">
+      <button class="control-btn reset-btn" onclick="resetWord()">
+        🔄 إعادة المحاولة
+      </button>
+      <button class="control-btn hint-btn" onclick="showHint()">
+        💡 مساعدة
+      </button>
+      <button class="control-btn next-btn" id="next-btn" onclick="nextWord()">
+        ➡️ الكلمة التالية
+      </button>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="success-message">
+      <h2 style="font-size: 2rem; margin-bottom: 1rem;">🎉 أحسنت!</h2>
+      <p style="font-size: 1.3rem;" id="success-text"></p>
+    </div>
+
+    <!-- Teacher's Encouragement -->
+    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 1.5rem; border-radius: 12px; margin-top: 2rem; text-align: center;">
+      <span style="font-size: 2rem;">👩‍🏫</span>
+      <p style="color: #1e3a8a; margin-top: 0.5rem; font-style: italic;" id="teacher-message">
+        استمر في المحاولة! يمكنك فعلها!
+      </p>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    // Game data
+    const words = [
+      // Easy words
+      { word: 'PLANE', emoji: '✈️', meaning: 'طائرة', difficulty: 'easy', points: 10 },
+      { word: 'CLOUD', emoji: '☁️', meaning: 'سحابة', difficulty: 'easy', points: 10 },
+      { word: 'SUN', emoji: '☀️', meaning: 'شمس', difficulty: 'easy', points: 10 },
+      { word: 'SKY', emoji: '🌤️', meaning: 'سماء', difficulty: 'easy', points: 10 },
+      { word: 'BIRD', emoji: '🐦', meaning: 'طائر', difficulty: 'easy', points: 10 },
+
+      // Medium words
+      { word: 'TRAVEL', emoji: '🧳', meaning: 'سفر', difficulty: 'medium', points: 20 },
+      { word: 'AIRPORT', emoji: '🛫', meaning: 'مطار', difficulty: 'medium', points: 20 },
+      { word: 'LONDON', emoji: '🏰', meaning: 'لندن', difficulty: 'medium', points: 20 },
+      { word: 'TEACHER', emoji: '👩‍🏫', meaning: 'معلم', difficulty: 'medium', points: 20 },
+      { word: 'STUDENT', emoji: '🧒', meaning: 'طالب', difficulty: 'medium', points: 20 },
+
+      // Hard words
+      { word: 'ADVENTURE', emoji: '🗺️', meaning: 'مغامرة', difficulty: 'hard', points: 30 },
+      { word: 'KNOWLEDGE', emoji: '📚', meaning: 'معرفة', difficulty: 'hard', points: 30 },
+      { word: 'LEARNING', emoji: '✏️', meaning: 'تعلم', difficulty: 'hard', points: 30 },
+    ];
+
+    let currentWordIndex = 0;
+    let currentWord = '';
+    let builtWord = '';
+    let score = 0;
+    let level = 1;
+    let streak = 0;
+    let hintsUsed = 0;
+
+    const teacherMessages = [
+      'رائع! استمر هكذا! 🌟',
+      'أنت تتحسن! أحسنت! 👏',
+      'ممتاز! أنت طالب مجتهد! 📚',
+      'واو! إجابة صحيحة! 🎯',
+      'رائع جداً! فخور بك! 💪',
+      'أحسنت! تستحق النجوم! ⭐',
+      'مذهل! استمر في التعلم! 🚀'
+    ];
+
+    // Initialize game
+    function initGame() {
+      currentWord = words[currentWordIndex].word;
+      displayWord();
+      updateScoreboard();
+      updateDifficultyBadge();
+    }
+
+    // Display word
+    function displayWord() {
+      const wordData = words[currentWordIndex];
+      document.getElementById('word-emoji').textContent = wordData.emoji;
+      document.getElementById('word-meaning').textContent = wordData.meaning;
+      document.getElementById('word-display').textContent = '_'.repeat(currentWord.length);
+
+      // Create letter buttons
+      const letters = currentWord.split('').sort(() => Math.random() - 0.5);
+      const container = document.getElementById('letters-container');
+      container.innerHTML = '';
+
+      letters.forEach((letter, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'letter-btn';
+        btn.textContent = letter;
+        btn.onclick = () => selectLetter(index, letter);
+        btn.id = `letter-${index}`;
+        container.appendChild(btn);
+      });
+
+      builtWord = '';
+      hintsUsed = 0;
+    }
+
+    // Select letter
+    function selectLetter(index, letter) {
+      builtWord += letter;
+      document.getElementById('word-display').textContent = builtWord;
+      document.getElementById(`letter-${index}`).disabled = true;
+
+      if (builtWord.length === currentWord.length) {
+        checkWord();
+      }
+    }
+
+    // Check word
+    function checkWord() {
+      const wordData = words[currentWordIndex];
+      const successMsg = document.getElementById('success-message');
+      const successText = document.getElementById('success-text');
+      const teacherMsg = document.getElementById('teacher-message');
+
+      if (builtWord === currentWord) {
+        // Correct!
+        const points = wordData.points - (hintsUsed * 5);
+        score += Math.max(points, 5);
+        streak++;
+
+        successText.textContent = `حصلت على ${points} نقطة!`;
+        successMsg.style.display = 'block';
+        document.getElementById('next-btn').style.display = 'inline-block';
+
+        teacherMsg.textContent = teacherMessages[Math.floor(Math.random() * teacherMessages.length)];
+
+        // Update level
+        if (score >= level * 100) {
+          level++;
+          alert(`🎉 مستوى جديد! وصلت إلى المستوى ${level}!`);
+        }
+
+        updateScoreboard();
+
+        // Save progress
+        if (typeof progressTracker !== 'undefined') {
+          progressTracker.progress.totalPoints += points;
+          progressTracker.saveProgress();
+        }
+      } else {
+        // Wrong!
+        streak = 0;
+        teacherMsg.textContent = 'حاول مرة أخرى! لا تستسلم! 💪';
+        setTimeout(() => {
+          resetWord();
+        }, 1500);
+      }
+    }
+
+    // Reset word
+    function resetWord() {
+      builtWord = '';
+      document.getElementById('word-display').textContent = '_'.repeat(currentWord.length);
+      document.getElementById('success-message').style.display = 'none';
+      document.getElementById('next-btn').style.display = 'none';
+
+      // Enable all buttons
+      const buttons = document.querySelectorAll('.letter-btn');
+      buttons.forEach(btn => btn.disabled = false);
+    }
+
+    // Show hint
+    function showHint() {
+      if (hintsUsed >= 2) {
+        alert('لقد استخدمت كل المساعدات المتاحة!');
+        return;
+      }
+
+      hintsUsed++;
+      const nextLetter = currentWord[builtWord.length];
+
+      // Find and click the correct letter
+      const buttons = document.querySelectorAll('.letter-btn:not(:disabled)');
+      for (let btn of buttons) {
+        if (btn.textContent === nextLetter) {
+          btn.click();
+          break;
+        }
+      }
+
+      document.getElementById('teacher-message').textContent = 'استخدمت مساعدة! سأخصم 5 نقاط. 💡';
+    }
+
+    // Next word
+    function nextWord() {
+      currentWordIndex++;
+      if (currentWordIndex >= words.length) {
+        alert(`🎉 تهانينا! أكملت جميع الكلمات! النقاط النهائية: ${score}`);
+        currentWordIndex = 0;
+        score = 0;
+        level = 1;
+        streak = 0;
+      }
+
+      currentWord = words[currentWordIndex].word;
+      displayWord();
+      updateScoreboard();
+      updateDifficultyBadge();
+      document.getElementById('success-message').style.display = 'none';
+      document.getElementById('next-btn').style.display = 'none';
+    }
+
+    // Update scoreboard
+    function updateScoreboard() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('level').textContent = level;
+      document.getElementById('streak').textContent = streak;
+    }
+
+    // Update difficulty badge
+    function updateDifficultyBadge() {
+      const badge = document.getElementById('difficulty-badge');
+      const difficulty = words[currentWordIndex].difficulty;
+
+      badge.className = 'level-badge';
+      if (difficulty === 'easy') {
+        badge.classList.add('level-easy');
+        badge.textContent = 'سهل';
+      } else if (difficulty === 'medium') {
+        badge.classList.add('level-medium');
+        badge.textContent = 'متوسط';
+      } else {
+        badge.classList.add('level-hard');
+        badge.textContent = 'صعب';
+      }
+    }
+
+    // Start game
+    initGame();
+  </script>
+</body>
+</html>
