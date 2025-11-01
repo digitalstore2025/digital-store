@@ -1,319 +1,88 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="منصة تعليمية تفاعلية لتعلم اللغة الإنجليزية للأطفال - رحلة جوية مليئة بالمغامرات والتعلم">
-  <meta name="keywords" content="تعليم الإنجليزية، أطفال، منصة تعليمية، طائرة تعليمية، مغامرات تعليمية">
-  <title>Sky Learning - منصة الطائرة التعليمية ✈️</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <title>منتجات رقمية وخدمات تسويق</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f9f9f9; margin: 0; padding: 0; direction: rtl; }
+    header, footer { background-color: #2b2b2b; color: white; padding: 1rem; text-align: center; }
+    nav a { margin: 0 1rem; color: white; text-decoration: none; font-weight: bold; }
+    section { padding: 2rem; max-width: 900px; margin: auto; }
+    h1, h2 { color: #222; }
+    .cta { background: #007bff; color: white; padding: 1rem 2rem; text-decoration: none; display: inline-block; margin-top: 1rem; border-radius: 8px; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    .card { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    form input, form textarea { width: 100%; margin-bottom: 1rem; padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; }
+    form button { background: #28a745; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <!-- Animated Sky Background -->
-  <div class="sky-background">
-    <div class="cloud cloud-1"></div>
-    <div class="cloud cloud-2"></div>
-    <div class="cloud cloud-3"></div>
-    <div class="cloud cloud-4"></div>
-  </div>
-
-  <!-- Header - Airplane Cockpit -->
   <header>
-    <div class="header-content">
-      <div class="logo">
-        <span class="plane-icon">✈️</span>
-        <span>Sky Learning</span>
-      </div>
-      <nav>
-        <a href="#home">الرئيسية</a>
-        <a href="#journeys">الرحلات</a>
-        <a href="#games">الألعاب</a>
-        <a href="#characters">الشخصيات</a>
-        <a href="#blog">المدونة</a>
-        <a href="pages/journeys.html">ابدأ التعلم</a>
-      </nav>
-    </div>
+    <h1>منتجات رقمية وخدمات تسويق</h1>
+    <nav>
+      <a href="#about">من نحن</a>
+      <a href="#contact">تواصل معنا</a>
+    </nav>
   </header>
 
-  <!-- Hero Section - Welcome Aboard! -->
-  <section id="home" class="hero">
-    <div class="airplane-window">
-      <div class="window-view">🌍</div>
-    </div>
-    <h1>مرحباً بك على متن الطائرة التعليمية!</h1>
-    <p>
-      انضم إلى الكابتن علي والمعلمة سارة في مغامرة تعليمية حول العالم 🌏<br>
-      تعلم اللغة الإنجليزية من خلال رحلات مثيرة إلى مدن وجزر وغابات مذهلة!
-    </p>
-    <div id="progress-display" style="margin: 1rem 0;"></div>
-    <a href="#journeys" class="cta-button">🚀 ابدأ المغامرة الآن</a>
+  <section id="hero">
+    <h2>عصري. احترافي. متنوع.</h2>
+    <p>استكشف مجموعتنا الواسعة من المنتجات الرقمية والدورات والخدمات التسويقية المصممة لك.</p>
+    <a class="cta" href="#products">ابدأ الآن</a>
   </section>
 
-  <!-- Journeys Section - Destinations -->
-  <section id="journeys" class="journeys-section">
-    <h2 class="section-title">الرحلات التعليمية حول العالم</h2>
-    <div class="journeys-grid">
-      <!-- Journey 1: London -->
-      <div class="journey-card">
-        <span class="journey-icon">🏰</span>
-        <h3>رحلة إلى لندن</h3>
-        <p>
-          استكشف العاصمة البريطانية! تعلم المفردات الإنجليزية عن المدينة، الطقس،
-          والمعالم السياحية الشهيرة مثل ساعة بيغ بن وعين لندن.
-        </p>
-        <a href="pages/journeys/london.html" class="journey-link">انطلق في الرحلة →</a>
+  <section id="products">
+    <h2>المنتجات الرقمية</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>قصص أطفال</h3>
+        <p>قصص تعليمية وتفاعلية للأطفال.</p>
       </div>
-
-      <!-- Journey 2: Paris -->
-      <div class="journey-card">
-        <span class="journey-icon">🗼</span>
-        <h3>رحلة إلى باريس</h3>
-        <p>
-          زر مدينة النور! تعلم كلمات إنجليزية عن الفن، الطعام، والثقافة الفرنسية.
-          استمتع بالتعرف على برج إيفل ومتحف اللوفر.
-        </p>
-        <a href="pages/journeys/paris.html" class="journey-link">انطلق في الرحلة →</a>
+      <div class="card">
+        <h3>كتب تلوين</h3>
+        <p>كتب جاهزة للطباعة تدمج بين التلوين والتعليم.</p>
       </div>
-
-      <!-- Journey 3: Amazon Rainforest -->
-      <div class="journey-card">
-        <span class="journey-icon">🌳</span>
-        <h3>مغامرة في غابة الأمازون</h3>
-        <p>
-          اكتشف أسرار الغابات المطيرة! تعلم أسماء الحيوانات، النباتات، والطبيعة
-          باللغة الإنجليزية مع الكثير من المرح والمغامرات.
-        </p>
-        <a href="pages/journeys/amazon.html" class="journey-link">انطلق في الرحلة →</a>
-      </div>
-
-      <!-- Journey 4: Beach Island -->
-      <div class="journey-card">
-        <span class="journey-icon">🏝️</span>
-        <h3>جزيرة الشاطئ الاستوائية</h3>
-        <p>
-          استرخ على الشاطئ وتعلم! مفردات عن البحر، الرمال، الأنشطة الصيفية
-          والكائنات البحرية بطريقة ممتعة وتفاعلية.
-        </p>
-        <a href="pages/journeys/island.html" class="journey-link">انطلق في الرحلة →</a>
-      </div>
-
-      <!-- Journey 5: Mountain Adventure -->
-      <div class="journey-card">
-        <span class="journey-icon">⛰️</span>
-        <h3>مغامرة الجبال الثلجية</h3>
-        <p>
-          تسلق القمم الشاهقة! تعلم كلمات عن الطقس البارد، الرياضات الشتوية،
-          والطبيعة الجبلية مع أصدقائك الجدد.
-        </p>
-        <a href="pages/journeys/mountain.html" class="journey-link">انطلق في الرحلة →</a>
-      </div>
-
-      <!-- Journey 6: Space Station -->
-      <div class="journey-card">
-        <span class="journey-icon">🚀</span>
-        <h3>محطة الفضاء الدولية</h3>
-        <p>
-          اصعد إلى الفضاء! استكشف الكواكب والنجوم وتعلم مفردات علمية بسيطة
-          عن الفضاء والكون الواسع.
-        </p>
-        <a href="pages/journeys/space.html" class="journey-link">انطلق في الرحلة →</a>
+      <div class="card">
+        <h3>دورات تدريبية</h3>
+        <p>دورات في التسويق، الصحافة والإعلام.</p>
       </div>
     </div>
   </section>
 
-  <!-- Interactive Games Section -->
-  <section id="games" class="games-section">
-    <h2 class="section-title">الألعاب التعليمية التفاعلية</h2>
-    <div class="games-grid">
-      <div class="game-card" onclick="location.href='pages/games/drag-drop.html'">
-        <div class="game-icon">🎯</div>
-        <h3>لعبة السحب والإفلات</h3>
-        <p>اسحب الكلمات إلى المكان الصحيح!</p>
+  <section id="services">
+    <h2>الخدمات</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>كتابة محتوى</h3>
       </div>
-
-      <div class="game-card" onclick="location.href='pages/games/matching.html'">
-        <div class="game-icon">🃏</div>
-        <h3>لعبة التوصيل</h3>
-        <p>طابق الكلمات الإنجليزية مع العربية!</p>
+      <div class="card">
+        <h3>استشارات تسويقية</h3>
       </div>
-
-      <div class="game-card" onclick="location.href='pages/games/word-building.html'">
-        <div class="game-icon">🔤</div>
-        <h3>لعبة بناء الكلمات</h3>
-        <p>كون الكلمات من الحروف المبعثرة!</p>
-      </div>
-
-      <div class="game-card" onclick="location.href='pages/games/quiz.html'">
-        <div class="game-icon">❓</div>
-        <h3>اختبار المعرفة</h3>
-        <p>اختبر ما تعلمته في الرحلات!</p>
-      </div>
-
-      <div class="game-card" onclick="location.href='pages/games/pronunciation.html'">
-        <div class="game-icon">🎤</div>
-        <h3>لعبة النطق</h3>
-        <p>تدرب على نطق الكلمات الصحيح!</p>
-      </div>
-
-      <div class="game-card" onclick="location.href='pages/games/memory.html'">
-        <div class="game-icon">🧠</div>
-        <h3>لعبة الذاكرة</h3>
-        <p>اختبر ذاكرتك مع الكلمات الإنجليزية!</p>
+      <div class="card">
+        <h3>إدارات السوشيال ميديا</h3>
       </div>
     </div>
   </section>
 
-  <!-- Characters Section -->
-  <section id="characters" class="characters-section">
-    <h2 class="section-title">تعرف على طاقم الطائرة</h2>
-    <div class="characters-grid">
-      <div class="character-card">
-        <div class="character-avatar">👨‍✈️</div>
-        <h3 class="character-name">الكابتن علي</h3>
-        <p class="character-role">قائد الطائرة ومعلم الجغرافيا</p>
-        <p>
-          الكابتن علي طيار محترف يعشق السفر حول العالم!
-          سيأخذكم في رحلات مثيرة ويعلمكم عن البلدان والثقافات المختلفة.
-        </p>
-        <a href="pages/characters.html#captain" class="journey-link">اقرأ المزيد →</a>
-      </div>
-
-      <div class="character-card">
-        <div class="character-avatar">👩‍🏫</div>
-        <h3 class="character-name">المعلمة سارة</h3>
-        <p class="character-role">معلمة اللغة الإنجليزية</p>
-        <p>
-          المعلمة سارة متحمسة جداً لتعليم الأطفال!
-          تستخدم طرق ممتعة ومبتكرة لجعل التعلم سهلاً ومشوقاً للجميع.
-        </p>
-        <a href="pages/characters.html#teacher" class="journey-link">اقرأ المزيد →</a>
-      </div>
-
-      <div class="character-card">
-        <div class="character-avatar">🧒</div>
-        <h3 class="character-name">أحمد الفضولي</h3>
-        <p class="character-role">الطالب المغامر</p>
-        <p>
-          أحمد فضولي ويحب طرح الأسئلة!
-          سيرافقكم في الرحلات ويساعدكم على اكتشاف أشياء جديدة ومثيرة.
-        </p>
-        <a href="pages/characters.html#ahmed" class="journey-link">اقرأ المزيد →</a>
-      </div>
-
-      <div class="character-card">
-        <div class="character-avatar">👧</div>
-        <h3 class="character-name">ليلى الذكية</h3>
-        <p class="character-role">الطالبة المتفوقة</p>
-        <p>
-          ليلى ذكية وسريعة التعلم!
-          تحب المنافسة الودية وتساعد أصدقاءها على التقدم في دراستهم.
-        </p>
-        <a href="pages/characters.html#layla" class="journey-link">اقرأ المزيد →</a>
-      </div>
-    </div>
+  <section id="about">
+    <h2>من نحن</h2>
+    <p>نحن منصة رقمية متخصصة في تقديم محتوى رقمي تعليمي وتسويقي، مصمم خصيصًا لتلبية احتياجات الآباء، المعلمين، ورواد الأعمال.</p>
   </section>
 
-  <!-- Blog Section -->
-  <section id="blog" class="blog-section">
-    <h2 class="section-title">مدونة الرحلات التعليمية</h2>
-    <div class="blog-grid">
-      <div class="blog-card">
-        <div class="blog-image">📝</div>
-        <div class="blog-content">
-          <p class="blog-date">28 أكتوبر 2025</p>
-          <h3 class="blog-title">كيف تجعل تعلم الإنجليزية ممتعاً للأطفال؟</h3>
-          <p class="blog-excerpt">
-            اكتشف أفضل الطرق لجعل تعلم اللغة الإنجليزية تجربة ممتعة ومثيرة
-            لأطفالك من خلال الألعاب والمغامرات...
-          </p>
-          <a href="blog/article-1.html" class="read-more">اقرأ المزيد →</a>
-        </div>
-      </div>
-
-      <div class="blog-card">
-        <div class="blog-image">🌍</div>
-        <div class="blog-content">
-          <p class="blog-date">25 أكتوبر 2025</p>
-          <h3 class="blog-title">أهمية التعلم من خلال المغامرات</h3>
-          <p class="blog-excerpt">
-            لماذا يعتبر التعلم القائم على المغامرات والاستكشاف أكثر فعالية
-            للأطفال في المراحل المبكرة؟
-          </p>
-          <a href="blog/article-2.html" class="read-more">اقرأ المزيد →</a>
-        </div>
-      </div>
-
-      <div class="blog-card">
-        <div class="blog-image">🎮</div>
-        <div class="blog-content">
-          <p class="blog-date">20 أكتوبر 2025</p>
-          <h3 class="blog-title">الألعاب التعليمية: أداة قوية للتعلم</h3>
-          <p class="blog-excerpt">
-            كيف تساعد الألعاب التفاعلية الأطفال على استيعاب المفاهيم بشكل أسرع
-            وأكثر متعة؟ دليل شامل للآباء والمعلمين.
-          </p>
-          <a href="blog/article-3.html" class="read-more">اقرأ المزيد →</a>
-        </div>
-      </div>
-    </div>
+  <section id="contact">
+    <h2>تواصل معنا</h2>
+    <form>
+      <input type="text" placeholder="الاسم" required>
+      <input type="email" placeholder="البريد الإلكتروني" required>
+      <textarea placeholder="رسالتك" rows="4" required></textarea>
+      <button type="submit">إرسال</button>
+    </form>
   </section>
 
-  <!-- About Section -->
-  <section id="about" style="padding: 4rem 2rem; max-width: 900px; margin: 0 auto; text-align: center;">
-    <h2 style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 1.5rem;">
-      عن منصة Sky Learning
-    </h2>
-    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-light); margin-bottom: 1rem;">
-      <strong>Sky Learning</strong> هي منصة تعليمية رقمية مبتكرة موجهة للأطفال والطلاب المبتدئين
-      في اللغة الإنجليزية (مستوى A1). نحن نؤمن بأن التعلم يجب أن يكون مغامرة ممتعة!
-    </p>
-    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-light);">
-      من خلال مفهوم الطائرة التعليمية المتنقلة، نأخذ الطلاب في رحلات حول العالم،
-      حيث يتعلمون اللغة الإنجليزية من خلال قصص تفاعلية، ألعاب تعليمية،
-      وشخصيات كرتونية محببة تجعل كل درس تجربة لا تُنسى!
-    </p>
-  </section>
-
-  <!-- Footer -->
   <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Sky Learning ✈️</h3>
-        <p>منصة تعليمية تفاعلية لتعلم اللغة الإنجليزية بطريقة ممتعة ومبتكرة</p>
-      </div>
-
-      <div class="footer-section">
-        <h3>روابط سريعة</h3>
-        <a href="#home">الرئيسية</a>
-        <a href="#journeys">الرحلات</a>
-        <a href="#games">الألعاب</a>
-        <a href="#characters">الشخصيات</a>
-        <a href="#blog">المدونة</a>
-      </div>
-
-      <div class="footer-section">
-        <h3>الموارد</h3>
-        <a href="pages/resources.html">مواد تعليمية</a>
-        <a href="pages/parents-guide.html">دليل الآباء</a>
-        <a href="pages/teachers-guide.html">دليل المعلمين</a>
-        <a href="pages/faq.html">الأسئلة الشائعة</a>
-      </div>
-
-      <div class="footer-section">
-        <h3>تواصل معنا</h3>
-        <p>📧 info@skylearning.com</p>
-        <p>📱 +966 XX XXX XXXX</p>
-        <p>🌐 www.skylearning.com</p>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>جميع الحقوق محفوظة &copy; 2025 Sky Learning Platform</p>
-      <p>صُممت بكل ❤️ لمستقبل أطفالنا</p>
-    </div>
+    <p>جميع الحقوق محفوظة &copy; 2025</p>
   </footer>
-
-  <!-- JavaScript -->
-  <script src="assets/js/app.js"></script>
 </body>
 </html>
