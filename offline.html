@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>غير متصل - Sky Learning</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 2rem;
+    }
+
+    .offline-container {
+      text-align: center;
+      max-width: 500px;
+    }
+
+    .offline-icon {
+      font-size: 120px;
+      margin-bottom: 2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .retry-button {
+      background: #fff;
+      color: #667eea;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .retry-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .offline-message {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-top: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .offline-message ul {
+      list-style: none;
+      text-align: right;
+    }
+
+    .offline-message li {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+    }
+
+    .offline-message li::before {
+      content: "✓ ";
+      margin-left: 0.5rem;
+      color: #4ade80;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="offline-icon">✈️</div>
+    <h1>غير متصل بالإنترنت</h1>
+    <p>يبدو أنك غير متصل بالإنترنت حالياً. بعض المميزات قد لا تكون متاحة.</p>
+
+    <button class="retry-button" onclick="location.reload()">
+      🔄 إعادة المحاولة
+    </button>
+
+    <div class="offline-message">
+      <h3 style="margin-bottom: 1rem;">يمكنك الوصول إلى:</h3>
+      <ul>
+        <li>الصفحات المحفوظة مسبقاً</li>
+        <li>المحتوى التعليمي المخزن</li>
+        <li>بعض الألعاب التفاعلية</li>
+        <li>الإنجازات والنقاط السابقة</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Check for connection periodically
+    setInterval(() => {
+      if (navigator.onLine) {
+        location.reload();
+      }
+    }, 5000);
+
+    // Listen for online event
+    window.addEventListener('online', () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>

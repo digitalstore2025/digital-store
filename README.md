@@ -81,24 +81,33 @@ cd digital-store
 ```
 digital-store/
 │
-├── index.html              # الصفحة الرئيسية
-├── README.md              # هذا الملف
+├── index.html                    # الصفحة الرئيسية
+├── README.md                     # هذا الملف
+├── manifest.json                 # PWA Manifest
+├── service-worker.js             # Service Worker للعمل دون اتصال
+├── offline.html                  # صفحة عدم الاتصال
 │
-├── assets/                # الملفات الثابتة
+├── assets/                       # الملفات الثابتة
 │   ├── css/
-│   │   └── style.css     # ملف الأنماط الرئيسي
+│   │   ├── style.css            # ملف الأنماط الرئيسي
+│   │   └── enhancements.css     # التحسينات (Dark Mode, Toast, etc.)
 │   ├── js/
-│   │   └── app.js        # ملف JavaScript الرئيسي
-│   └── images/           # الصور والأيقونات
+│   │   ├── app.js               # التطبيق الرئيسي (محدث وآمن)
+│   │   ├── utils.js             # أدوات الأمان والأداء
+│   │   ├── toast.js             # نظام الإشعارات
+│   │   ├── theme-manager.js     # إدارة الوضع الليلي/النهاري
+│   │   ├── analytics.js         # نظام التحليلات
+│   │   └── achievements.js      # نظام الإنجازات المتقدم
+│   └── images/                  # الصور والأيقونات
 │
-├── pages/                 # الصفحات الفرعية
-│   ├── journeys/         # صفحات الرحلات
+├── pages/                        # الصفحات الفرعية
+│   ├── journeys/                # صفحات الرحلات
 │   │   └── london.html
-│   ├── games/            # صفحات الألعاب
+│   ├── games/                   # صفحات الألعاب
 │   │   └── word-building.html
-│   └── characters.html   # صفحة الشخصيات
+│   └── characters.html          # صفحة الشخصيات
 │
-└── blog/                 # المدونة
+└── blog/                        # المدونة
     └── article-1.html
 ```
 
@@ -112,6 +121,7 @@ digital-store/
   - CSS Animations
   - Responsive Design
   - Gradient Backgrounds
+  - CSS Custom Properties (Dark Mode)
 
 - **JavaScript (ES6+)**: التفاعلية والديناميكية
   - DOM Manipulation
@@ -119,6 +129,49 @@ digital-store/
   - Local Storage API
   - Speech Synthesis API
   - Drag and Drop API
+  - Service Worker API (PWA)
+  - IntersectionObserver API
+
+- **PWA (Progressive Web App)**:
+  - Service Worker للعمل دون اتصال
+  - Web App Manifest للتثبيت
+  - Offline Support
+
+- **الأمان والأداء**:
+  - DOMPurify لحماية من XSS
+  - Error Handling الشامل
+  - Performance Optimizations
+  - Lazy Loading
+
+---
+
+## 🔒 التحسينات الأمنية والأداء
+
+### الأمان
+- ✅ حماية من هجمات XSS باستخدام DOMPurify
+- ✅ معالجة آمنة للإدخالات
+- ✅ إدارة آمنة للـ LocalStorage مع دعم وضع التصفح الخفي
+- ✅ معالجة شاملة للأخطاء
+
+### الأداء
+- ✅ تحميل كسول للموارد
+- ✅ Debouncing و Throttling للأحداث
+- ✅ استخدام Document Fragment
+- ✅ تحسين الرسوم المتحركة بـ will-change
+- ✅ Rate Limiting للطلبات
+
+### تجربة المستخدم
+- ✅ إشعارات Toast حديثة
+- ✅ وضع ليلي/نهاري
+- ✅ دعم PWA للتثبيت والعمل دون اتصال
+- ✅ تحسينات إمكانية الوصول (ARIA)
+- ✅ نظام تحليلات يحترم الخصوصية
+
+### نظام الإنجازات المتقدم
+- 🏆 20+ إنجاز في فئات مختلفة
+- 🔥 نظام الـ Streaks اليومية
+- 📊 تتبع التقدم التفصيلي
+- 🎯 مكافآت ونقاط
 
 ---
 

@@ -5,8 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="منصة تعليمية تفاعلية لتعلم اللغة الإنجليزية للأطفال - رحلة جوية مليئة بالمغامرات والتعلم">
   <meta name="keywords" content="تعليم الإنجليزية، أطفال، منصة تعليمية، طائرة تعليمية، مغامرات تعليمية">
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#1e90ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Sky Learning">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/icon-192.png">
+  <link rel="apple-touch-icon" href="/assets/images/icon-192.png">
+
   <title>Sky Learning - منصة الطائرة التعليمية ✈️</title>
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/enhancements.css">
 </head>
 <body>
   <!-- Animated Sky Background -->
@@ -54,7 +69,7 @@
     <h2 class="section-title">الرحلات التعليمية حول العالم</h2>
     <div class="journeys-grid">
       <!-- Journey 1: London -->
-      <div class="journey-card">
+      <div class="journey-card" data-journey="london">
         <span class="journey-icon">🏰</span>
         <h3>رحلة إلى لندن</h3>
         <p>
@@ -65,7 +80,7 @@
       </div>
 
       <!-- Journey 2: Paris -->
-      <div class="journey-card">
+      <div class="journey-card" data-journey="paris">
         <span class="journey-icon">🗼</span>
         <h3>رحلة إلى باريس</h3>
         <p>
@@ -76,7 +91,7 @@
       </div>
 
       <!-- Journey 3: Amazon Rainforest -->
-      <div class="journey-card">
+      <div class="journey-card" data-journey="amazon">
         <span class="journey-icon">🌳</span>
         <h3>مغامرة في غابة الأمازون</h3>
         <p>
@@ -87,7 +102,7 @@
       </div>
 
       <!-- Journey 4: Beach Island -->
-      <div class="journey-card">
+      <div class="journey-card" data-journey="island">
         <span class="journey-icon">🏝️</span>
         <h3>جزيرة الشاطئ الاستوائية</h3>
         <p>
@@ -98,7 +113,7 @@
       </div>
 
       <!-- Journey 5: Mountain Adventure -->
-      <div class="journey-card">
+      <div class="journey-card" data-journey="mountain">
         <span class="journey-icon">⛰️</span>
         <h3>مغامرة الجبال الثلجية</h3>
         <p>
@@ -109,7 +124,7 @@
       </div>
 
       <!-- Journey 6: Space Station -->
-      <div class="journey-card">
+      <div class="journey-card" data-journey="space">
         <span class="journey-icon">🚀</span>
         <h3>محطة الفضاء الدولية</h3>
         <p>
@@ -125,37 +140,37 @@
   <section id="games" class="games-section">
     <h2 class="section-title">الألعاب التعليمية التفاعلية</h2>
     <div class="games-grid">
-      <div class="game-card" onclick="location.href='pages/games/drag-drop.html'">
+      <div class="game-card" data-game="drag-drop" onclick="location.href='pages/games/drag-drop.html'">
         <div class="game-icon">🎯</div>
         <h3>لعبة السحب والإفلات</h3>
         <p>اسحب الكلمات إلى المكان الصحيح!</p>
       </div>
 
-      <div class="game-card" onclick="location.href='pages/games/matching.html'">
+      <div class="game-card" data-game="matching" onclick="location.href='pages/games/matching.html'">
         <div class="game-icon">🃏</div>
         <h3>لعبة التوصيل</h3>
         <p>طابق الكلمات الإنجليزية مع العربية!</p>
       </div>
 
-      <div class="game-card" onclick="location.href='pages/games/word-building.html'">
+      <div class="game-card" data-game="word-building" onclick="location.href='pages/games/word-building.html'">
         <div class="game-icon">🔤</div>
         <h3>لعبة بناء الكلمات</h3>
         <p>كون الكلمات من الحروف المبعثرة!</p>
       </div>
 
-      <div class="game-card" onclick="location.href='pages/games/quiz.html'">
+      <div class="game-card" data-game="quiz" onclick="location.href='pages/games/quiz.html'">
         <div class="game-icon">❓</div>
         <h3>اختبار المعرفة</h3>
         <p>اختبر ما تعلمته في الرحلات!</p>
       </div>
 
-      <div class="game-card" onclick="location.href='pages/games/pronunciation.html'">
+      <div class="game-card" data-game="pronunciation" onclick="location.href='pages/games/pronunciation.html'">
         <div class="game-icon">🎤</div>
         <h3>لعبة النطق</h3>
         <p>تدرب على نطق الكلمات الصحيح!</p>
       </div>
 
-      <div class="game-card" onclick="location.href='pages/games/memory.html'">
+      <div class="game-card" data-game="memory" onclick="location.href='pages/games/memory.html'">
         <div class="game-icon">🧠</div>
         <h3>لعبة الذاكرة</h3>
         <p>اختبر ذاكرتك مع الكلمات الإنجليزية!</p>
@@ -313,7 +328,18 @@
     </div>
   </footer>
 
-  <!-- JavaScript -->
+  <!-- JavaScript Libraries -->
+  <!-- DOMPurify for XSS protection -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+  <!-- Core Utilities -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/toast.js"></script>
+  <script src="assets/js/theme-manager.js"></script>
+  <script src="assets/js/analytics.js"></script>
+  <script src="assets/js/achievements.js"></script>
+
+  <!-- Main Application -->
   <script src="assets/js/app.js"></script>
 </body>
 </html>

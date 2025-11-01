@@ -1,15 +1,120 @@
 // ===================================
-// Sky Learning Platform - Main JavaScript
+// Sky Learning Platform - Main Application
 // Interactive Educational Platform
 // ===================================
 
-// Initialize on DOM load
+'use strict';
+
+// Import utilities (when using modules)
+// Fallback for non-module usage
+const SecurityUtils = window.SecurityUtils || {
+  sanitizeHTML: (html) => {
+    const div = document.createElement('div');
+    div.textContent = html;
+    return div.innerHTML;
+  }
+};
+
+const ErrorHandler = window.ErrorHandler || {
+  handle: (error, context) => console.error(`[${context}]`, error)
+};
+
+const StorageManager = window.StorageManager || class {
+  constructor(key) {
+    this.key = key;
+  }
+  get(def) {
+    try {
+      return JSON.parse(localStorage.getItem(this.key)) || def;
+    } catch {
+      return def;
+    }
+  }
+  set(val) {
+    try {
+      localStorage.setItem(this.key, JSON.stringify(val));
+    } catch {}
+  }
+};
+
+// ===================================
+// Application State
+// ===================================
+const AppState = {
+  initialized: false,
+  progressTracker: null,
+  activeGames: new Map(),
+  serviceWorkerReady: false
+};
+
+// ===================================
+// Initialize Application
+// ===================================
 document.addEventListener('DOMContentLoaded', function() {
-  initializeClouds();
-  initializeSmoothScroll();
-  initializeInteractiveElements();
-  initializeProgressTracking();
+  try {
+    console.log('[App] Initializing Sky Learning Platform...');
+
+    initializeClouds();
+    initializeSmoothScroll();
+    initializeInteractiveElements();
+    initializeProgressTracking();
+    initializeServiceWorker();
+
+    AppState.initialized = true;
+    console.log('[App] Initialization complete ✓');
+
+    // Track page view
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  } catch (error) {
+    ErrorHandler.handle(error, 'App.init');
+    if (window.ToastNotification) {
+      window.ToastNotification.error('حدث خطأ أثناء تحميل المنصة');
+    }
+  }
 });
+
+// ===================================
+// Service Worker Registration
+// ===================================
+function initializeServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => {
+        console.log('[App] ServiceWorker registered:', registration.scope);
+        AppState.serviceWorkerReady = true;
+
+        // Check for updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              if (window.ToastNotification) {
+                window.ToastNotification.info(
+                  'يتوفر تحديث جديد!',
+                  0,
+                  {
+                    closeable: true,
+                    action: {
+                      text: 'تحديث الآن',
+                      onClick: () => {
+                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        window.location.reload();
+                      }
+                    }
+                  }
+                );
+              }
+            }
+          });
+        });
+      })
+      .catch((error) => {
+        console.warn('[App] ServiceWorker registration failed:', error);
+      });
+  }
+}
 
 // ===================================
 // Cloud Animation System
@@ -19,16 +124,22 @@ function initializeClouds() {
   if (!skyBackground) return;
 
   const cloudCount = 8;
+  const fragment = document.createDocumentFragment();
+
   for (let i = 0; i < cloudCount; i++) {
     const cloud = document.createElement('div');
     cloud.className = 'cloud';
-    cloud.style.width = `${Math.random() * 50 + 60}px`;
-    cloud.style.height = `${Math.random() * 20 + 30}px`;
-    cloud.style.top = `${Math.random() * 100}%`;
-    cloud.style.animationDuration = `${Math.random() * 30 + 40}s`;
-    cloud.style.animationDelay = `${Math.random() * 10}s`;
-    skyBackground.appendChild(cloud);
+    cloud.style.cssText = `
+      width: ${Math.random() * 50 + 60}px;
+      height: ${Math.random() * 20 + 30}px;
+      top: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 30 + 40}s;
+      animation-delay: ${Math.random() * 10}s;
+    `;
+    fragment.appendChild(cloud);
   }
+
+  skyBackground.appendChild(fragment);
 }
 
 // ===================================
@@ -37,13 +148,22 @@ function initializeClouds() {
 function initializeSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (!href || href === '#') return;
+
       e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
+      const target = document.querySelector(href);
+
       if (target) {
         target.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
+
+        // Track navigation
+        if (window.Analytics) {
+          window.Analytics.trackEvent('Navigation', 'scroll', href);
+        }
       }
     });
   });
@@ -57,10 +177,16 @@ function initializeInteractiveElements() {
   const journeyCards = document.querySelectorAll('.journey-card');
   journeyCards.forEach(card => {
     card.addEventListener('mouseenter', function() {
-      this.style.transform = 'translateY(-10px) scale(1.02)';
+      this.classList.add('hover');
     });
     card.addEventListener('mouseleave', function() {
-      this.style.transform = 'translateY(0) scale(1)';
+      this.classList.remove('hover');
+    });
+    card.addEventListener('click', function() {
+      const journeyId = this.dataset.journey;
+      if (journeyId && window.Analytics) {
+        window.Analytics.trackEvent('Journey', 'click', journeyId);
+      }
     });
   });
 
@@ -68,10 +194,15 @@ function initializeInteractiveElements() {
   const gameCards = document.querySelectorAll('.game-card');
   gameCards.forEach(card => {
     card.addEventListener('click', function() {
-      this.style.animation = 'pulse 0.5s';
+      this.classList.add('pulse');
       setTimeout(() => {
-        this.style.animation = '';
+        this.classList.remove('pulse');
       }, 500);
+
+      const gameId = this.dataset.game;
+      if (gameId && window.Analytics) {
+        window.Analytics.trackEvent('Game', 'click', gameId);
+      }
     });
   });
 
@@ -79,9 +210,9 @@ function initializeInteractiveElements() {
   const characterAvatars = document.querySelectorAll('.character-avatar');
   characterAvatars.forEach(avatar => {
     avatar.addEventListener('click', function() {
-      this.style.transform = 'scale(1.2) rotate(360deg)';
+      this.classList.add('spin');
       setTimeout(() => {
-        this.style.transform = '';
+        this.classList.remove('spin');
       }, 600);
     });
   });
@@ -92,89 +223,193 @@ function initializeInteractiveElements() {
 // ===================================
 class LearningProgress {
   constructor() {
+    this.storage = new StorageManager('skyLearningProgress');
     this.progress = this.loadProgress();
   }
 
   loadProgress() {
-    const saved = localStorage.getItem('skyLearningProgress');
-    return saved ? JSON.parse(saved) : {
+    return this.storage.get({
       completedJourneys: [],
       totalPoints: 0,
       level: 1,
-      achievements: []
-    };
+      achievements: [],
+      wordsLearned: 0,
+      gamesPlayed: 0,
+      lastVisit: null
+    });
   }
 
   saveProgress() {
-    localStorage.setItem('skyLearningProgress', JSON.stringify(this.progress));
+    try {
+      this.storage.set(this.progress);
+      console.log('[Progress] Saved:', this.progress);
+    } catch (error) {
+      ErrorHandler.handle(error, 'LearningProgress.saveProgress');
+    }
   }
 
-  completeJourney(journeyId) {
-    if (!this.progress.completedJourneys.includes(journeyId)) {
-      this.progress.completedJourneys.push(journeyId);
-      this.progress.totalPoints += 100;
-      this.checkLevelUp();
+  completeJourney(journeyId, score = 100, timeSpent = 0) {
+    try {
+      if (!this.progress.completedJourneys.includes(journeyId)) {
+        this.progress.completedJourneys.push(journeyId);
+        this.progress.totalPoints += score;
+        this.checkLevelUp();
+        this.saveProgress();
+
+        // Show achievement notification
+        if (window.ToastNotification) {
+          window.ToastNotification.success(
+            `رحلة مكتملة! 🎉<br>لقد أكملت رحلة ${this.getJourneyName(journeyId)}<br>+${score} نقطة`,
+            5000
+          );
+        }
+
+        // Update achievement system
+        if (window.AchievementSystem) {
+          window.AchievementSystem.updateProgress('journeys_completed', this.progress.completedJourneys.length);
+
+          if (score === 100) {
+            window.AchievementSystem.updateProgress('journey_perfect', null, {
+              journey: journeyId,
+              score: 100
+            });
+          }
+
+          if (timeSpent > 0) {
+            window.AchievementSystem.updateProgress('journey_time', null, {
+              journey: journeyId,
+              time: timeSpent
+            });
+          }
+        }
+
+        // Track in analytics
+        if (window.Analytics) {
+          window.Analytics.trackJourneyComplete(journeyId, score, timeSpent);
+        }
+      }
+    } catch (error) {
+      ErrorHandler.handle(error, 'LearningProgress.completeJourney');
+    }
+  }
+
+  completeGame(gameId, score = 0, perfect = false) {
+    try {
+      this.progress.gamesPlayed++;
+      this.progress.totalPoints += score;
       this.saveProgress();
-      this.showAchievement('رحلة مكتملة!', `لقد أكملت رحلة ${journeyId}`);
+
+      // Update achievements
+      if (window.AchievementSystem) {
+        window.AchievementSystem.updateProgress('games_played', this.progress.gamesPlayed);
+
+        if (perfect || score === 100) {
+          window.AchievementSystem.updateProgress('perfect_game_score', 100);
+        }
+      }
+
+      // Track in analytics
+      if (window.Analytics) {
+        window.Analytics.trackGamePlay(gameId, score);
+      }
+    } catch (error) {
+      ErrorHandler.handle(error, 'LearningProgress.completeGame');
+    }
+  }
+
+  learnWord(word) {
+    try {
+      this.progress.wordsLearned++;
+      this.progress.totalPoints += 5;
+      this.saveProgress();
+
+      // Update achievements
+      if (window.AchievementSystem) {
+        window.AchievementSystem.updateProgress('words_learned', this.progress.wordsLearned);
+      }
+    } catch (error) {
+      ErrorHandler.handle(error, 'LearningProgress.learnWord');
     }
   }
 
   checkLevelUp() {
     const newLevel = Math.floor(this.progress.totalPoints / 500) + 1;
     if (newLevel > this.progress.level) {
+      const oldLevel = this.progress.level;
       this.progress.level = newLevel;
-      this.showAchievement('مستوى جديد!', `لقد وصلت إلى المستوى ${newLevel}`);
+
+      if (window.ToastNotification) {
+        window.ToastNotification.success(
+          `🎊 مستوى جديد!<br>لقد وصلت إلى المستوى ${newLevel}`,
+          5000
+        );
+      }
+
+      if (window.Analytics) {
+        window.Analytics.trackEvent('Progress', 'level_up', `${oldLevel} → ${newLevel}`, newLevel);
+      }
     }
   }
 
-  showAchievement(title, message) {
-    const achievement = document.createElement('div');
-    achievement.className = 'achievement-popup';
-    achievement.innerHTML = `
-      <h3>${title}</h3>
-      <p>${message}</p>
-    `;
-    achievement.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #4ade80, #22c55e);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      animation: slideIn 0.5s ease-out;
-    `;
-    document.body.appendChild(achievement);
-    setTimeout(() => {
-      achievement.style.animation = 'slideOut 0.5s ease-out';
-      setTimeout(() => achievement.remove(), 500);
-    }, 3000);
+  getJourneyName(journeyId) {
+    const names = {
+      london: 'لندن',
+      paris: 'باريس',
+      amazon: 'غابة الأمازون',
+      island: 'الجزيرة الاستوائية',
+      mountain: 'الجبال الثلجية',
+      space: 'محطة الفضاء'
+    };
+    return names[journeyId] || journeyId;
   }
 
   getProgress() {
     return this.progress;
   }
+
+  reset() {
+    if (confirm('هل أنت متأكد من إعادة تعيين جميع التقدم؟')) {
+      this.progress = {
+        completedJourneys: [],
+        totalPoints: 0,
+        level: 1,
+        achievements: [],
+        wordsLearned: 0,
+        gamesPlayed: 0,
+        lastVisit: null
+      };
+      this.saveProgress();
+
+      if (window.ToastNotification) {
+        window.ToastNotification.info('تم إعادة تعيين التقدم', 3000);
+      }
+    }
+  }
 }
 
+// Initialize progress tracker
 const progressTracker = new LearningProgress();
 
 function initializeProgressTracking() {
   const progress = progressTracker.getProgress();
-  console.log('Current Progress:', progress);
+  console.log('[Progress] Current progress:', progress);
 
   // Display progress if element exists
   const progressDisplay = document.getElementById('progress-display');
   if (progressDisplay) {
-    progressDisplay.innerHTML = `
-      <div class="progress-stats">
-        <span>المستوى: ${progress.level}</span>
-        <span>النقاط: ${progress.totalPoints}</span>
-        <span>الرحلات المكتملة: ${progress.completedJourneys.length}</span>
-      </div>
-    `;
+    updateProgressDisplay(progressDisplay, progress);
   }
+}
+
+function updateProgressDisplay(element, progress) {
+  const sanitizedHTML = `
+    <div class="progress-stats">
+      <span>المستوى: ${progress.level}</span>
+      <span>النقاط: ${progress.totalPoints}</span>
+      <span>الرحلات المكتملة: ${progress.completedJourneys.length}</span>
+    </div>
+  `;
+  element.innerHTML = sanitizedHTML;
 }
 
 // ===================================
@@ -183,182 +418,201 @@ function initializeProgressTracking() {
 
 // Drag and Drop Game
 function initDragDropGame(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
+  try {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-  const words = ['plane', 'cloud', 'sky', 'pilot', 'travel'];
-  const arabicWords = ['طائرة', 'سحابة', 'سماء', 'طيار', 'سفر'];
+    const words = ['plane', 'cloud', 'sky', 'pilot', 'travel'];
+    const arabicWords = ['طائرة', 'سحابة', 'سماء', 'طيار', 'سفر'];
 
-  let draggedElement = null;
+    let draggedElement = null;
+    const fragment = document.createDocumentFragment();
 
-  words.forEach((word, index) => {
-    const wordElement = document.createElement('div');
-    wordElement.textContent = word;
-    wordElement.draggable = true;
-    wordElement.className = 'draggable-word';
-    wordElement.style.cssText = `
-      background: #3b82f6;
-      color: white;
-      padding: 1rem;
-      margin: 0.5rem;
-      border-radius: 10px;
-      cursor: move;
-      display: inline-block;
-    `;
+    words.forEach((word, index) => {
+      const wordElement = document.createElement('div');
+      wordElement.textContent = word;
+      wordElement.draggable = true;
+      wordElement.className = 'draggable-word';
+      wordElement.dataset.index = index;
 
-    wordElement.addEventListener('dragstart', function(e) {
-      draggedElement = this;
-      this.style.opacity = '0.5';
+      wordElement.addEventListener('dragstart', function(e) {
+        draggedElement = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      wordElement.addEventListener('dragend', function() {
+        this.classList.remove('dragging');
+      });
+
+      fragment.appendChild(wordElement);
     });
 
-    wordElement.addEventListener('dragend', function() {
-      this.style.opacity = '1';
-    });
+    container.appendChild(fragment);
 
-    container.appendChild(wordElement);
-  });
+    // Track game start
+    if (window.Analytics) {
+      window.Analytics.trackEvent('Game', 'start', 'drag-drop');
+    }
+  } catch (error) {
+    ErrorHandler.handle(error, 'initDragDropGame');
+  }
 }
 
 // Matching Game
 function initMatchingGame(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
+  try {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-  const pairs = [
-    { english: 'Hello', arabic: 'مرحبا', emoji: '👋' },
-    { english: 'Thank you', arabic: 'شكرا', emoji: '🙏' },
-    { english: 'Goodbye', arabic: 'وداعا', emoji: '👋' },
-    { english: 'Friend', arabic: 'صديق', emoji: '👥' }
-  ];
+    const pairs = [
+      { english: 'Hello', arabic: 'مرحبا', emoji: '👋' },
+      { english: 'Thank you', arabic: 'شكرا', emoji: '🙏' },
+      { english: 'Goodbye', arabic: 'وداعا', emoji: '👋' },
+      { english: 'Friend', arabic: 'صديق', emoji: '👥' }
+    ];
 
-  let selectedCards = [];
-  let matchedPairs = 0;
+    let selectedCards = [];
+    let matchedPairs = 0;
+    const fragment = document.createDocumentFragment();
 
-  pairs.forEach(pair => {
-    const card = document.createElement('div');
-    card.className = 'matching-card';
-    card.innerHTML = `
-      <div class="card-front">${pair.emoji}</div>
-      <div class="card-back">
-        <p>${pair.english}</p>
-        <p>${pair.arabic}</p>
-      </div>
-    `;
-    card.style.cssText = `
-      background: white;
-      padding: 1.5rem;
-      margin: 0.5rem;
-      border-radius: 10px;
-      cursor: pointer;
-      display: inline-block;
-      transition: all 0.3s ease;
-    `;
+    pairs.forEach(pair => {
+      const card = document.createElement('div');
+      card.className = 'matching-card';
+      card.dataset.english = pair.english;
+      card.dataset.arabic = pair.arabic;
 
-    card.addEventListener('click', function() {
-      if (selectedCards.length < 2 && !this.classList.contains('matched')) {
-        this.classList.add('selected');
-        selectedCards.push(this);
+      const cardFront = document.createElement('div');
+      cardFront.className = 'card-front';
+      cardFront.textContent = pair.emoji;
 
-        if (selectedCards.length === 2) {
-          setTimeout(checkMatch, 500);
+      const cardBack = document.createElement('div');
+      cardBack.className = 'card-back';
+
+      const englishText = document.createElement('p');
+      englishText.textContent = pair.english;
+
+      const arabicText = document.createElement('p');
+      arabicText.textContent = pair.arabic;
+
+      cardBack.appendChild(englishText);
+      cardBack.appendChild(arabicText);
+
+      card.appendChild(cardFront);
+      card.appendChild(cardBack);
+
+      card.addEventListener('click', function() {
+        if (selectedCards.length < 2 && !this.classList.contains('matched')) {
+          this.classList.add('selected');
+          selectedCards.push(this);
+
+          if (selectedCards.length === 2) {
+            setTimeout(() => checkMatch(selectedCards, pairs.length), 500);
+          }
         }
-      }
+      });
+
+      fragment.appendChild(card);
     });
 
-    container.appendChild(card);
-  });
+    function checkMatch(cards, totalPairs) {
+      // Matching logic
+      const [card1, card2] = cards;
+      if (card1.dataset.english === card2.dataset.english) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
 
-  function checkMatch() {
-    // Matching logic would go here
-    selectedCards = [];
+        if (matchedPairs === totalPairs) {
+          if (window.ToastNotification) {
+            window.ToastNotification.success('أحسنت! 🎉 لقد أكملت اللعبة!', 3000);
+          }
+          progressTracker.completeGame('matching', 100, true);
+        }
+      }
+
+      cards.forEach(card => card.classList.remove('selected'));
+      selectedCards = [];
+    }
+
+    container.appendChild(fragment);
+
+    if (window.Analytics) {
+      window.Analytics.trackEvent('Game', 'start', 'matching');
+    }
+  } catch (error) {
+    ErrorHandler.handle(error, 'initMatchingGame');
   }
 }
 
 // Word Building Game
 function initWordBuildingGame(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
+  try {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-  const targetWord = 'AIRPLANE';
-  const letters = targetWord.split('').sort(() => Math.random() - 0.5);
-  let currentWord = '';
+    const targetWord = 'AIRPLANE';
+    const letters = targetWord.split('').sort(() => Math.random() - 0.5);
+    let currentWord = '';
 
-  const displayDiv = document.createElement('div');
-  displayDiv.className = 'word-display';
-  displayDiv.style.cssText = `
-    font-size: 2rem;
-    margin: 2rem 0;
-    min-height: 60px;
-    border: 2px dashed #3b82f6;
-    border-radius: 10px;
-    padding: 1rem;
-    text-align: center;
-  `;
-  container.appendChild(displayDiv);
+    const displayDiv = document.createElement('div');
+    displayDiv.className = 'word-display';
+    displayDiv.setAttribute('aria-live', 'polite');
+    container.appendChild(displayDiv);
 
-  const lettersDiv = document.createElement('div');
-  lettersDiv.className = 'letters-container';
-  container.appendChild(lettersDiv);
+    const lettersDiv = document.createElement('div');
+    lettersDiv.className = 'letters-container';
 
-  letters.forEach(letter => {
-    const letterBtn = document.createElement('button');
-    letterBtn.textContent = letter;
-    letterBtn.className = 'letter-btn';
-    letterBtn.style.cssText = `
-      background: #fbbf24;
-      color: #1f2937;
-      border: none;
-      padding: 1rem 1.5rem;
-      margin: 0.5rem;
-      border-radius: 10px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    `;
+    letters.forEach(letter => {
+      const letterBtn = document.createElement('button');
+      letterBtn.textContent = letter;
+      letterBtn.className = 'letter-btn';
+      letterBtn.setAttribute('aria-label', `حرف ${letter}`);
 
-    letterBtn.addEventListener('click', function() {
-      currentWord += letter;
-      displayDiv.textContent = currentWord;
-      this.disabled = true;
-      this.style.opacity = '0.5';
+      letterBtn.addEventListener('click', function() {
+        currentWord += letter;
+        displayDiv.textContent = currentWord;
+        this.disabled = true;
+        this.classList.add('used');
 
-      if (currentWord === targetWord) {
-        displayDiv.style.background = 'linear-gradient(135deg, #4ade80, #22c55e)';
-        displayDiv.style.color = 'white';
-        progressTracker.progress.totalPoints += 50;
-        progressTracker.saveProgress();
-        setTimeout(() => {
-          alert('أحسنت! لقد كونت الكلمة الصحيحة!');
-        }, 300);
-      }
+        if (currentWord === targetWord) {
+          displayDiv.classList.add('success');
+          progressTracker.completeGame('word-building', 50, true);
+          progressTracker.learnWord(targetWord);
+
+          setTimeout(() => {
+            if (window.ToastNotification) {
+              window.ToastNotification.success('أحسنت! 🎉 لقد كونت الكلمة الصحيحة!', 3000);
+            }
+          }, 300);
+        }
+      });
+
+      lettersDiv.appendChild(letterBtn);
     });
 
-    lettersDiv.appendChild(letterBtn);
-  });
+    container.appendChild(lettersDiv);
 
-  const resetBtn = document.createElement('button');
-  resetBtn.textContent = 'إعادة المحاولة';
-  resetBtn.style.cssText = `
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    margin-top: 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-  `;
-  resetBtn.addEventListener('click', function() {
-    currentWord = '';
-    displayDiv.textContent = '';
-    displayDiv.style.background = '';
-    displayDiv.style.color = '';
-    document.querySelectorAll('.letter-btn').forEach(btn => {
-      btn.disabled = false;
-      btn.style.opacity = '1';
+    const resetBtn = document.createElement('button');
+    resetBtn.textContent = 'إعادة المحاولة';
+    resetBtn.className = 'reset-btn';
+    resetBtn.addEventListener('click', function() {
+      currentWord = '';
+      displayDiv.textContent = '';
+      displayDiv.classList.remove('success');
+      document.querySelectorAll('.letter-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('used');
+      });
     });
-  });
-  container.appendChild(resetBtn);
+    container.appendChild(resetBtn);
+
+    if (window.Analytics) {
+      window.Analytics.trackEvent('Game', 'start', 'word-building');
+    }
+  } catch (error) {
+    ErrorHandler.handle(error, 'initWordBuildingGame');
+  }
 }
 
 // ===================================
@@ -370,7 +624,15 @@ class Quiz {
     this.currentQuestion = 0;
     this.score = 0;
     this.container = document.getElementById(containerId);
-    this.render();
+    this.startTime = Date.now();
+
+    if (this.container) {
+      this.render();
+
+      if (window.Analytics) {
+        window.Analytics.trackEvent('Quiz', 'start', containerId);
+      }
+    }
   }
 
   render() {
@@ -382,92 +644,125 @@ class Quiz {
     }
 
     const question = this.questions[this.currentQuestion];
-    this.container.innerHTML = `
-      <div class="quiz-container">
-        <h3>السؤال ${this.currentQuestion + 1} من ${this.questions.length}</h3>
-        <p class="question-text">${question.question}</p>
-        <div class="answers-container">
-          ${question.answers.map((answer, index) => `
-            <button class="answer-btn" onclick="quiz.checkAnswer(${index})">
-              ${answer}
-            </button>
-          `).join('')}
-        </div>
-        <div class="score-display">النقاط: ${this.score}</div>
-      </div>
-    `;
 
-    // Add styles
-    const style = `
-      <style>
-        .quiz-container {
-          background: white;
-          padding: 2rem;
-          border-radius: 15px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        .question-text {
-          font-size: 1.3rem;
-          margin: 2rem 0;
-          color: #1f2937;
-        }
-        .answer-btn {
-          display: block;
-          width: 100%;
-          background: #3b82f6;
-          color: white;
-          border: none;
-          padding: 1rem;
-          margin: 0.5rem 0;
-          border-radius: 10px;
-          font-size: 1.1rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        .answer-btn:hover {
-          background: #2563eb;
-          transform: translateX(-5px);
-        }
-        .score-display {
-          margin-top: 2rem;
-          font-size: 1.2rem;
-          font-weight: bold;
-          color: #4ade80;
-        }
-      </style>
-    `;
-    this.container.insertAdjacentHTML('beforebegin', style);
+    // Clear container
+    this.container.innerHTML = '';
+
+    const quizContainer = document.createElement('div');
+    quizContainer.className = 'quiz-container';
+
+    const questionHeader = document.createElement('h3');
+    questionHeader.textContent = `السؤال ${this.currentQuestion + 1} من ${this.questions.length}`;
+
+    const questionText = document.createElement('p');
+    questionText.className = 'question-text';
+    questionText.textContent = question.question;
+
+    const answersContainer = document.createElement('div');
+    answersContainer.className = 'answers-container';
+
+    question.answers.forEach((answer, index) => {
+      const answerBtn = document.createElement('button');
+      answerBtn.className = 'answer-btn';
+      answerBtn.textContent = answer;
+      answerBtn.addEventListener('click', () => this.checkAnswer(index));
+      answersContainer.appendChild(answerBtn);
+    });
+
+    const scoreDisplay = document.createElement('div');
+    scoreDisplay.className = 'score-display';
+    scoreDisplay.textContent = `النقاط: ${this.score}`;
+
+    quizContainer.appendChild(questionHeader);
+    quizContainer.appendChild(questionText);
+    quizContainer.appendChild(answersContainer);
+    quizContainer.appendChild(scoreDisplay);
+
+    this.container.appendChild(quizContainer);
   }
 
   checkAnswer(answerIndex) {
-    const question = this.questions[this.currentQuestion];
-    if (answerIndex === question.correct) {
-      this.score += 10;
-      progressTracker.progress.totalPoints += 10;
-      progressTracker.saveProgress();
-      alert('إجابة صحيحة! 🎉');
-    } else {
-      alert('حاول مرة أخرى! الإجابة الصحيحة: ' + question.answers[question.correct]);
+    try {
+      const question = this.questions[this.currentQuestion];
+      const isCorrect = answerIndex === question.correct;
+
+      if (isCorrect) {
+        this.score += 10;
+        progressTracker.progress.totalPoints += 10;
+        progressTracker.saveProgress();
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success('إجابة صحيحة! 🎉', 2000);
+        }
+      } else {
+        if (window.ToastNotification) {
+          window.ToastNotification.error(
+            `حاول مرة أخرى!<br>الإجابة الصحيحة: ${question.answers[question.correct]}`,
+            3000
+          );
+        }
+      }
+
+      this.currentQuestion++;
+
+      setTimeout(() => {
+        this.render();
+      }, 500);
+    } catch (error) {
+      ErrorHandler.handle(error, 'Quiz.checkAnswer');
     }
-    this.currentQuestion++;
-    this.render();
   }
 
   showResults() {
-    const percentage = (this.score / (this.questions.length * 10)) * 100;
-    this.container.innerHTML = `
-      <div class="quiz-results">
-        <h2>النتيجة النهائية</h2>
-        <div class="score-circle">
-          <span class="score-number">${percentage.toFixed(0)}%</span>
-        </div>
-        <p>لقد حصلت على ${this.score} من ${this.questions.length * 10} نقطة!</p>
-        <button onclick="location.reload()" class="retry-btn">إعادة الاختبار</button>
-      </div>
-    `;
+    try {
+      const percentage = (this.score / (this.questions.length * 10)) * 100;
+      const timeSpent = Math.floor((Date.now() - this.startTime) / 1000);
 
-    if (percentage >= 70) {
-      progressTracker.showAchievement('نجاح باهر!', 'لقد اجتزت الاختبار بنجاح!');
+      this.container.innerHTML = '';
+
+      const resultsContainer = document.createElement('div');
+      resultsContainer.className = 'quiz-results';
+
+      const title = document.createElement('h2');
+      title.textContent = 'النتيجة النهائية';
+
+      const scoreCircle = document.createElement('div');
+      scoreCircle.className = 'score-circle';
+
+      const scoreNumber = document.createElement('span');
+      scoreNumber.className = 'score-number';
+      scoreNumber.textContent = `${percentage.toFixed(0)}%`;
+      scoreCircle.appendChild(scoreNumber);
+
+      const scoreText = document.createElement('p');
+      scoreText.textContent = `لقد حصلت على ${this.score} من ${this.questions.length * 10} نقطة!`;
+
+      const retryBtn = document.createElement('button');
+      retryBtn.className = 'retry-btn';
+      retryBtn.textContent = 'إعادة الاختبار';
+      retryBtn.addEventListener('click', () => location.reload());
+
+      resultsContainer.appendChild(title);
+      resultsContainer.appendChild(scoreCircle);
+      resultsContainer.appendChild(scoreText);
+      resultsContainer.appendChild(retryBtn);
+
+      this.container.appendChild(resultsContainer);
+
+      if (percentage >= 70) {
+        progressTracker.completeGame('quiz', this.score, true);
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success('نجاح باهر! 🎊 لقد اجتزت الاختبار بنجاح!', 5000);
+        }
+      }
+
+      if (window.Analytics) {
+        window.Analytics.trackEvent('Quiz', 'complete', this.container.id, this.score);
+        window.Analytics.trackTiming('Quiz', this.container.id, timeSpent);
+      }
+    } catch (error) {
+      ErrorHandler.handle(error, 'Quiz.showResults');
     }
   }
 }
@@ -485,24 +780,32 @@ function initVoiceRecognition() {
     if (voiceBtn) {
       voiceBtn.addEventListener('click', () => {
         recognition.start();
+
+        if (window.ToastNotification) {
+          window.ToastNotification.info('🎤 تحدث الآن...', 3000);
+        }
       });
 
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        document.getElementById('voice-input').value = transcript;
+        const input = document.getElementById('voice-input');
+        if (input) {
+          input.value = transcript;
+        }
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success(`سمعت: ${transcript}`, 3000);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        ErrorHandler.handle(event.error, 'VoiceRecognition');
+        if (window.ToastNotification) {
+          window.ToastNotification.error('حدث خطأ في التعرف على الصوت', 3000);
+        }
       };
     }
   }
-}
-
-// ===================================
-// Animation Utilities
-// ===================================
-function animateElement(element, animation) {
-  element.style.animation = animation;
-  element.addEventListener('animationend', () => {
-    element.style.animation = '';
-  }, { once: true });
 }
 
 // ===================================
@@ -513,3 +816,6 @@ window.Quiz = Quiz;
 window.initDragDropGame = initDragDropGame;
 window.initMatchingGame = initMatchingGame;
 window.initWordBuildingGame = initWordBuildingGame;
+window.initVoiceRecognition = initVoiceRecognition;
+
+console.log('[App] Sky Learning Platform loaded ✓');
