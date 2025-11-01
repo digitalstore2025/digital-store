@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الشخصيات - Sky Learning ✈️</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .character-detail {
+      max-width: 1000px;
+      margin: 3rem auto;
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .character-profile {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .character-avatar-large {
+      font-size: 12rem;
+      text-align: center;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .character-info h2 {
+      color: #1e3a8a;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .character-info .role {
+      color: #6b7280;
+      font-size: 1.2rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .character-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+
+    .stat-label {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    .fun-facts {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      padding: 2rem;
+      border-radius: 15px;
+      margin: 2rem 0;
+    }
+
+    .fun-facts h3 {
+      color: #1e3a8a;
+      margin-bottom: 1rem;
+    }
+
+    .fun-facts ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .fun-facts li {
+      padding: 0.5rem 0;
+      padding-right: 2rem;
+      position: relative;
+    }
+
+    .fun-facts li::before {
+      content: '✨';
+      position: absolute;
+      right: 0;
+    }
+
+    @media (max-width: 768px) {
+      .character-profile {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sky Background -->
+  <div class="sky-background">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <span class="plane-icon">✈️</span>
+        <span>Sky Learning</span>
+      </div>
+      <nav>
+        <a href="../index.html">الرئيسية</a>
+        <a href="../index.html#journeys">الرحلات</a>
+        <a href="../index.html#games">الألعاب</a>
+        <a href="#captain">الشخصيات</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem;">
+      تعرف على طاقم الطائرة التعليمية
+    </h1>
+    <p style="font-size: 1.3rem;">
+      مجموعة رائعة من الشخصيات المحببة التي ستصاحبك في رحلتك التعليمية
+    </p>
+  </div>
+
+  <!-- Captain Ali -->
+  <div class="character-detail" id="captain">
+    <div class="character-profile">
+      <div class="character-avatar-large">👨‍✈️</div>
+      <div class="character-info">
+        <h2>الكابتن علي</h2>
+        <p class="role">قائد الطائرة ومعلم الجغرافيا</p>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #6b7280;">
+          الكابتن علي طيار محترف يمتلك خبرة 15 عاماً في الطيران حول العالم.
+          يعشق مشاركة معرفته عن البلدان والثقافات المختلفة مع الطلاب الصغار.
+          دائماً ما يجعل الرحلات التعليمية مثيرة وممتعة!
+        </p>
+      </div>
+    </div>
+
+    <div class="character-stats">
+      <div class="stat-card">
+        <div class="stat-value">120+</div>
+        <div class="stat-label">دولة زارها</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1000+</div>
+        <div class="stat-label">رحلة جوية</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">5000+</div>
+        <div class="stat-label">طالب علّمهم</div>
+      </div>
+    </div>
+
+    <div class="fun-facts">
+      <h3>حقائق ممتعة عن الكابتن علي:</h3>
+      <ul>
+        <li>يتحدث 5 لغات بطلاقة!</li>
+        <li>يحب جمع الطوابع البريدية من كل بلد يزوره</li>
+        <li>حلمه أن يطير إلى الفضاء يوماً ما</li>
+        <li>يعزف على الجيتار ويغني أغاني من حول العالم</li>
+        <li>لديه قطة اسمها "سحابة" ترافقه في بعض الرحلات</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Teacher Sarah -->
+  <div class="character-detail" id="teacher">
+    <div class="character-profile">
+      <div class="character-avatar-large">👩‍🏫</div>
+      <div class="character-info">
+        <h2>المعلمة سارة</h2>
+        <p class="role">معلمة اللغة الإنجليزية</p>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #6b7280;">
+          المعلمة سارة خبيرة في تعليم اللغة الإنجليزية للأطفال بطرق مبتكرة وممتعة.
+          تستخدم الألعاب والأغاني والقصص لجعل التعلم تجربة لا تُنسى.
+          دائماً ما تشجع الطلاب وتحتفل بإنجازاتهم الصغيرة!
+        </p>
+      </div>
+    </div>
+
+    <div class="character-stats">
+      <div class="stat-card">
+        <div class="stat-value">10+</div>
+        <div class="stat-label">سنوات خبرة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">500+</div>
+        <div class="stat-label">درس تفاعلي</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3000+</div>
+        <div class="stat-label">طالب متفوق</div>
+      </div>
+    </div>
+
+    <div class="fun-facts">
+      <h3>حقائق ممتعة عن المعلمة سارة:</h3>
+      <ul>
+        <li>تحب القراءة وتمتلك مكتبة ضخمة من كتب الأطفال</li>
+        <li>تكتب قصصاً تعليمية ممتعة في وقت فراغها</li>
+        <li>جائزة أفضل معلمة مبتكرة لعام 2024</li>
+        <li>تحب الرسم وتستخدمه في شرح الدروس</li>
+        <li>تصنع ألعاباً تعليمية يدوية للطلاب</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Ahmed -->
+  <div class="character-detail" id="ahmed">
+    <div class="character-profile">
+      <div class="character-avatar-large">🧒</div>
+      <div class="character-info">
+        <h2>أحمد الفضولي</h2>
+        <p class="role">الطالب المغامر</p>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #6b7280;">
+          أحمد طالب في الصف الثالث الابتدائي، فضولي ويحب طرح الأسئلة عن كل شيء.
+          يعشق المغامرات والاستكشاف ودائماً ما يكون أول من يتطوع لتجربة أشياء جديدة.
+          حلمه أن يصبح مستكشفاً مشهوراً عندما يكبر!
+        </p>
+      </div>
+    </div>
+
+    <div class="character-stats">
+      <div class="stat-card">
+        <div class="stat-value">9</div>
+        <div class="stat-label">سنوات العمر</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">25</div>
+        <div class="stat-label">رحلة أكملها</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">500</div>
+        <div class="stat-label">كلمة تعلمها</div>
+      </div>
+    </div>
+
+    <div class="fun-facts">
+      <h3>حقائق ممتعة عن أحمد:</h3>
+      <ul>
+        <li>يحب الديناصورات ويعرف أسماء 20 نوعاً منها</li>
+        <li>يجمع صور الأماكن التي يزورها</li>
+        <li>يحب لعبة كرة القدم وفريقه المفضل ريال مدريد</li>
+        <li>دائماً ما يحمل دفتر ملاحظات صغير لكتابة الكلمات الجديدة</li>
+        <li>يحب الحلويات وخاصة الشوكولاتة!</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Layla -->
+  <div class="character-detail" id="layla">
+    <div class="character-profile">
+      <div class="character-avatar-large">👧</div>
+      <div class="character-info">
+        <h2>ليلى الذكية</h2>
+        <p class="role">الطالبة المتفوقة</p>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #6b7280;">
+          ليلى طالبة متفوقة في الصف الرابع الابتدائي، ذكية وسريعة التعلم.
+          تحب القراءة والرياضيات وتساعد أصدقاءها دائماً في الدراسة.
+          تحلم بأن تصبح عالمة أو معلمة عندما تكبر!
+        </p>
+      </div>
+    </div>
+
+    <div class="character-stats">
+      <div class="stat-card">
+        <div class="stat-value">10</div>
+        <div class="stat-label">سنوات العمر</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">30</div>
+        <div class="stat-label">رحلة أكملتها</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">800</div>
+        <div class="stat-label">كلمة تعلمتها</div>
+      </div>
+    </div>
+
+    <div class="fun-facts">
+      <h3>حقائق ممتعة عن ليلى:</h3>
+      <ul>
+        <li>تقرأ كتاباً كل أسبوع وتحب قصص المغامرات</li>
+        <li>تحب الرسم والتلوين وتشارك في مسابقات فنية</li>
+        <li>تعزف على البيانو وتحفظ 10 أغانٍ</li>
+        <li>تحب مساعدة الآخرين وتطوع في المكتبة المدرسية</li>
+        <li>لديها أرنب أليف اسمه "فلافي"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div style="text-align: center; padding: 3rem 2rem; max-width: 800px; margin: 0 auto;">
+    <h2 style="color: #1e3a8a; font-size: 2rem; margin-bottom: 1rem;">
+      هل أنت مستعد للانضمام إليهم؟
+    </h2>
+    <p style="font-size: 1.2rem; color: #6b7280; margin-bottom: 2rem;">
+      ابدأ رحلتك التعليمية الآن وكن جزءاً من مغامرات الطائرة التعليمية!
+    </p>
+    <a href="../index.html#journeys" style="display: inline-block; background: linear-gradient(135deg, #ff6b35 0%, #ff8555 100%); color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.2rem;">
+      ابدأ المغامرة الآن 🚀
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Sky Learning ✈️</h3>
+        <p>منصة تعليمية تفاعلية لتعلم اللغة الإنجليزية بطريقة ممتعة ومبتكرة</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>روابط سريعة</h3>
+        <a href="../index.html">الرئيسية</a>
+        <a href="../index.html#journeys">الرحلات</a>
+        <a href="../index.html#games">الألعاب</a>
+        <a href="../index.html#blog">المدونة</a>
+      </div>
+
+      <div class="footer-section">
+        <h3>تواصل معنا</h3>
+        <p>📧 info@skylearning.com</p>
+        <p>📱 +966 XX XXX XXXX</p>
+        <p>🌐 www.skylearning.com</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>جميع الحقوق محفوظة &copy; 2025 Sky Learning Platform</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>
