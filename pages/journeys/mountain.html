@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مغامرة الجبال الثلجية - Sky Learning ✈️</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .journey-header { background: linear-gradient(135deg, #1e40af 0%, #60a5fa 100%); color: white; padding: 3rem 2rem; text-align: center; }
+    .vocab-card { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+    .vocab-card:hover { transform: translateY(-5px); }
+    .vocab-emoji { font-size: 3rem; display: block; }
+    .vocab-english { font-size: 1.3rem; font-weight: bold; color: #1e40af; }
+    .vocab-arabic { font-size: 1.1rem; color: #6b7280; }
+    .vocabulary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .lesson-card { background: white; border-radius: 15px; padding: 2rem; margin: 2rem 0; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .complete-button { background: linear-gradient(135deg, #1e40af 0%, #60a5fa 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#journeys">الرحلات</a></nav>
+    </div>
+  </header>
+
+  <div class="journey-header">
+    <h1>⛰️ مغامرة الجبال الثلجية</h1>
+    <p>تسلق القمم واستمتع بالثلوج!</p>
+  </div>
+
+  <div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+    <div class="lesson-card">
+      <h2>❄️ الطقس البارد والجبال</h2>
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Mountain')"><span class="vocab-emoji">⛰️</span><div class="vocab-english">Mountain</div><div class="vocab-arabic">جبل</div></div>
+        <div class="vocab-card" onclick="speakWord('Snow')"><span class="vocab-emoji">❄️</span><div class="vocab-english">Snow</div><div class="vocab-arabic">ثلج</div></div>
+        <div class="vocab-card" onclick="speakWord('Ice')"><span class="vocab-emoji">🧊</span><div class="vocab-english">Ice</div><div class="vocab-arabic">جليد</div></div>
+        <div class="vocab-card" onclick="speakWord('Cold')"><span class="vocab-emoji">🥶</span><div class="vocab-english">Cold</div><div class="vocab-arabic">بارد</div></div>
+        <div class="vocab-card" onclick="speakWord('Winter')"><span class="vocab-emoji">🌨️</span><div class="vocab-english">Winter</div><div class="vocab-arabic">شتاء</div></div>
+        <div class="vocab-card" onclick="speakWord('Snowman')"><span class="vocab-emoji">⛄</span><div class="vocab-english">Snowman</div><div class="vocab-arabic">رجل ثلج</div></div>
+      </div>
+    </div>
+
+    <div class="lesson-card">
+      <h2>⛷️ الرياضات الشتوية</h2>
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Skiing')"><span class="vocab-emoji">⛷️</span><div class="vocab-english">Skiing</div><div class="vocab-arabic">التزلج</div></div>
+        <div class="vocab-card" onclick="speakWord('Snowboard')"><span class="vocab-emoji">🏂</span><div class="vocab-english">Snowboard</div><div class="vocab-arabic">لوح التزلج</div></div>
+        <div class="vocab-card" onclick="speakWord('Sled')"><span class="vocab-emoji">🛷</span><div class="vocab-english">Sled</div><div class="vocab-arabic">زلاجة</div></div>
+        <div class="vocab-card" onclick="speakWord('Jacket')"><span class="vocab-emoji">🧥</span><div class="vocab-english">Jacket</div><div class="vocab-arabic">سترة</div></div>
+        <div class="vocab-card" onclick="speakWord('Gloves')"><span class="vocab-emoji">🧤</span><div class="vocab-english">Gloves</div><div class="vocab-arabic">قفازات</div></div>
+        <div class="vocab-card" onclick="speakWord('Scarf')"><span class="vocab-emoji">🧣</span><div class="vocab-english">Scarf</div><div class="vocab-arabic">وشاح</div></div>
+      </div>
+    </div>
+
+    <div class="lesson-card" style="text-align: center;">
+      <h2>🎉 ممتاز!</h2>
+      <button class="complete-button" onclick="completeJourney()">✅ إكمال الرحلة</button>
+      <br><br><a href="../../index.html#journeys" style="color: #1e40af;">← العودة</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    function speakWord(w) { if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u);if(window.ToastNotification)window.ToastNotification.info(`🔊 ${w}`,1500);}}
+    function completeJourney() { if(window.progressTracker){window.progressTracker.completeJourney('mountain',100);if(window.ToastNotification)window.ToastNotification.success('🎉 +100',3000);setTimeout(()=>window.location.href='../../index.html#journeys',2000);}}
+  </script>
+</body>
+</html>

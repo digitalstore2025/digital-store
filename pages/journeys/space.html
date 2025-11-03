@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محطة الفضاء الدولية - Sky Learning ✈️</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .journey-header { background: linear-gradient(135deg, #581c87 0%, #a855f7 100%); color: white; padding: 3rem 2rem; text-align: center; }
+    .vocab-card { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+    .vocab-card:hover { transform: translateY(-5px) rotate(2deg); }
+    .vocab-emoji { font-size: 3rem; display: block; }
+    .vocab-english { font-size: 1.3rem; font-weight: bold; color: #581c87; }
+    .vocab-arabic { font-size: 1.1rem; color: #6b7280; }
+    .vocabulary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .lesson-card { background: white; border-radius: 15px; padding: 2rem; margin: 2rem 0; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
+    .complete-button { background: linear-gradient(135deg, #581c87 0%, #a855f7 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#journeys">الرحلات</a></nav>
+    </div>
+  </header>
+
+  <div class="journey-header">
+    <h1>🚀 محطة الفضاء الدولية</h1>
+    <p>استكشف الكون والكواكب!</p>
+  </div>
+
+  <div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+    <div class="lesson-card">
+      <h2>🌌 الفضاء والكواكب</h2>
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Space')"><span class="vocab-emoji">🌌</span><div class="vocab-english">Space</div><div class="vocab-arabic">فضاء</div></div>
+        <div class="vocab-card" onclick="speakWord('Planet')"><span class="vocab-emoji">🪐</span><div class="vocab-english">Planet</div><div class="vocab-arabic">كوكب</div></div>
+        <div class="vocab-card" onclick="speakWord('Star')"><span class="vocab-emoji">⭐</span><div class="vocab-english">Star</div><div class="vocab-arabic">نجمة</div></div>
+        <div class="vocab-card" onclick="speakWord('Moon')"><span class="vocab-emoji">🌙</span><div class="vocab-english">Moon</div><div class="vocab-arabic">قمر</div></div>
+        <div class="vocab-card" onclick="speakWord('Sun')"><span class="vocab-emoji">☀️</span><div class="vocab-english">Sun</div><div class="vocab-arabic">شمس</div></div>
+        <div class="vocab-card" onclick="speakWord('Earth')"><span class="vocab-emoji">🌍</span><div class="vocab-english">Earth</div><div class="vocab-arabic">أرض</div></div>
+        <div class="vocab-card" onclick="speakWord('Rocket')"><span class="vocab-emoji">🚀</span><div class="vocab-english">Rocket</div><div class="vocab-arabic">صاروخ</div></div>
+        <div class="vocab-card" onclick="speakWord('Astronaut')"><span class="vocab-emoji">👨‍🚀</span><div class="vocab-english">Astronaut</div><div class="vocab-arabic">رائد فضاء</div></div>
+      </div>
+    </div>
+
+    <div class="lesson-card">
+      <h2>🛸 المركبات الفضائية</h2>
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Spaceship')"><span class="vocab-emoji">🛸</span><div class="vocab-english">Spaceship</div><div class="vocab-arabic">سفينة فضاء</div></div>
+        <div class="vocab-card" onclick="speakWord('Satellite')"><span class="vocab-emoji">🛰️</span><div class="vocab-english">Satellite</div><div class="vocab-arabic">قمر صناعي</div></div>
+        <div class="vocab-card" onclick="speakWord('Telescope')"><span class="vocab-emoji">🔭</span><div class="vocab-english">Telescope</div><div class="vocab-arabic">تلسكوب</div></div>
+        <div class="vocab-card" onclick="speakWord('Galaxy')"><span class="vocab-emoji">🌌</span><div class="vocab-english">Galaxy</div><div class="vocab-arabic">مجرة</div></div>
+        <div class="vocab-card" onclick="speakWord('Comet')"><span class="vocab-emoji">☄️</span><div class="vocab-english">Comet</div><div class="vocab-arabic">مذنب</div></div>
+        <div class="vocab-card" onclick="speakWord('Alien')"><span class="vocab-emoji">👽</span><div class="vocab-english">Alien</div><div class="vocab-arabic">كائن فضائي</div></div>
+      </div>
+    </div>
+
+    <div class="lesson-card" style="text-align: center;">
+      <h2>🎉 إنجاز فضائي!</h2>
+      <p>لقد أكملت رحلة الفضاء! 🚀</p>
+      <button class="complete-button" onclick="completeJourney()">✅ إكمال الرحلة</button>
+      <br><br><a href="../../index.html#journeys" style="color: #581c87;">← العودة للأرض</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    function speakWord(w) { if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(w);u.lang='en-US';speechSynthesis.speak(u);if(window.ToastNotification)window.ToastNotification.info(`🔊 ${w}`,1500);}}
+    function completeJourney() { if(window.progressTracker){window.progressTracker.completeJourney('space',100);if(window.ToastNotification)window.ToastNotification.success('🎉 +100',3000);setTimeout(()=>window.location.href='../../index.html#journeys',2000);}}
+  </script>
+</body>
+</html>

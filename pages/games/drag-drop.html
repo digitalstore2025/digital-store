@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة السحب والإفلات - Sky Learning</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .game-container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .game-header { text-align: center; margin-bottom: 2rem; }
+    .score-board { display: flex; justify-content: space-between; padding: 1rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 15px; margin-bottom: 2rem; }
+    .words-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 2rem 0; padding: 1.5rem; background: #f9fafb; border-radius: 15px; min-height: 150px; }
+    .word-item { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 1rem; border-radius: 10px; cursor: move; text-align: center; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
+    .word-item:hover { transform: scale(1.05); box-shadow: 0 6px 15px rgba(59, 130, 246, 0.5); }
+    .word-item.dragging { opacity: 0.5; }
+    .drop-zones { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 2rem 0; }
+    .drop-zone { padding: 2rem; background: #f3f4f6; border: 3px dashed #d1d5db; border-radius: 15px; min-height: 200px; transition: all 0.3s ease; }
+    .drop-zone.drag-over { background: #dbeafe; border-color: #3b82f6; border-style: solid; }
+    .drop-zone h3 { text-align: center; color: #6b7280; margin-bottom: 1rem; }
+    .dropped-word { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.75rem; margin: 0.5rem; border-radius: 8px; text-align: center; }
+    .reset-btn { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; font-size: 1rem; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#games">الألعاب</a></nav>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🎯 لعبة السحب والإفلات</h1>
+      <p>اسحب الكلمات إلى الفئة الصحيحة!</p>
+    </div>
+
+    <div class="score-board">
+      <div><strong>النقاط:</strong> <span id="score">0</span></div>
+      <div><strong>الصحيحة:</strong> <span id="correct">0</span></div>
+      <div><strong>الخاطئة:</strong> <span id="wrong">0</span></div>
+    </div>
+
+    <h3 style="text-align: center; color: #6b7280; margin-bottom: 1rem;">الكلمات المتاحة:</h3>
+    <div class="words-container" id="wordsContainer"></div>
+
+    <div class="drop-zones">
+      <div class="drop-zone" data-category="animals" id="animalsZone">
+        <h3>🐾 الحيوانات (Animals)</h3>
+        <div id="animalsDropped"></div>
+      </div>
+      <div class="drop-zone" data-category="food" id="foodZone">
+        <h3>🍎 الطعام (Food)</h3>
+        <div id="foodDropped"></div>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="reset-btn" onclick="resetGame()">🔄 إعادة اللعبة</button>
+      <br><br>
+      <a href="../../index.html#games" style="color: #3b82f6;">← العودة للألعاب</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    const words = [
+      {word: 'Cat', arabic: 'قطة', category: 'animals'},
+      {word: 'Dog', arabic: 'كلب', category: 'animals'},
+      {word: 'Apple', arabic: 'تفاحة', category: 'food'},
+      {word: 'Banana', arabic: 'موز', category: 'food'},
+      {word: 'Lion', arabic: 'أسد', category: 'animals'},
+      {word: 'Bread', arabic: 'خبز', category: 'food'},
+      {word: 'Fish', arabic: 'سمك', category: 'animals'},
+      {word: 'Pizza', arabic: 'بيتزا', category: 'food'}
+    ];
+
+    let score = 0, correct = 0, wrong = 0;
+    let draggedElement = null;
+
+    function initGame() {
+      const container = document.getElementById('wordsContainer');
+      container.innerHTML = '';
+      words.sort(() => Math.random() - 0.5);
+
+      words.forEach((item, index) => {
+        const wordDiv = document.createElement('div');
+        wordDiv.className = 'word-item';
+        wordDiv.draggable = true;
+        wordDiv.textContent = `${item.word}\n${item.arabic}`;
+        wordDiv.dataset.category = item.category;
+        wordDiv.dataset.word = item.word;
+
+        wordDiv.addEventListener('dragstart', (e) => {
+          draggedElement = e.target;
+          e.target.classList.add('dragging');
+        });
+
+        wordDiv.addEventListener('dragend', (e) => {
+          e.target.classList.remove('dragging');
+        });
+
+        container.appendChild(wordDiv);
+      });
+
+      // Setup drop zones
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.classList.add('drag-over');
+        });
+
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+
+          if (draggedElement) {
+            const wordCategory = draggedElement.dataset.category;
+            const zoneCategory = zone.dataset.category;
+
+            if (wordCategory === zoneCategory) {
+              // Correct!
+              correct++;
+              score += 10;
+              const droppedContainer = zone.querySelector('[id$="Dropped"]');
+              const droppedWord = document.createElement('div');
+              droppedWord.className = 'dropped-word';
+              droppedWord.textContent = draggedElement.textContent;
+              droppedContainer.appendChild(droppedWord);
+              draggedElement.remove();
+
+              if (window.ToastNotification) {
+                window.ToastNotification.success('صحيح! 🎉 +10', 1500);
+              }
+
+              // Check if all words are placed
+              if (document.querySelectorAll('.word-item').length === 0) {
+                gameComplete();
+              }
+            } else {
+              // Wrong!
+              wrong++;
+              score = Math.max(0, score - 5);
+              if (window.ToastNotification) {
+                window.ToastNotification.error('خطأ! -5 😕', 1500);
+              }
+            }
+
+            updateScore();
+          }
+        });
+      });
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('correct').textContent = correct;
+      document.getElementById('wrong').textContent = wrong;
+    }
+
+    function gameComplete() {
+      if (window.ToastNotification) {
+        window.ToastNotification.success(`🎊 أحسنت! لقد أكملت اللعبة!<br>النقاط النهائية: ${score}`, 5000);
+      }
+      if (window.progressTracker) {
+        window.progressTracker.completeGame('drag-drop', score, score >= 60);
+      }
+    }
+
+    function resetGame() {
+      score = 0;
+      correct = 0;
+      wrong = 0;
+      updateScore();
+      document.getElementById('animalsDropped').innerHTML = '';
+      document.getElementById('foodDropped').innerHTML = '';
+      initGame();
+    }
+
+    // Initialize game
+    initGame();
+
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>

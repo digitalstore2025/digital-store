@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رحلة إلى باريس - Sky Learning ✈️</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .journey-header {
+      background: linear-gradient(135deg, #db2777 0%, #f472b6 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .journey-header::before {
+      content: '🗼';
+      position: absolute;
+      font-size: 15rem;
+      opacity: 0.1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .journey-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .lesson-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .vocabulary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .vocab-card {
+      background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .vocab-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .vocab-emoji {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .vocab-english {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #be185d;
+      margin-bottom: 0.3rem;
+    }
+
+    .vocab-arabic {
+      font-size: 1.1rem;
+      color: #6b7280;
+    }
+
+    .vocab-pronunciation {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      font-style: italic;
+      margin-top: 0.3rem;
+    }
+
+    .interactive-exercise {
+      background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+      padding: 2rem;
+      border-radius: 15px;
+      margin: 2rem 0;
+    }
+
+    .exercise-option {
+      background: white;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .exercise-option:hover {
+      border-color: #db2777;
+      transform: translateX(-5px);
+    }
+
+    .complete-button {
+      background: linear-gradient(135deg, #db2777 0%, #f472b6 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+    }
+
+    .complete-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(219, 39, 119, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <a href="../../index.html" style="text-decoration: none; color: inherit;">
+          <span class="plane-icon">✈️</span>
+          <span>Sky Learning</span>
+        </a>
+      </div>
+      <nav>
+        <a href="../../index.html">الرئيسية</a>
+        <a href="../../index.html#journeys">الرحلات</a>
+        <a href="../../index.html#games">الألعاب</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Journey Header -->
+  <div class="journey-header">
+    <h1>🗼 رحلة إلى باريس - مدينة النور</h1>
+    <p>اكتشف عاصمة الفن والثقافة الفرنسية</p>
+  </div>
+
+  <!-- Journey Content -->
+  <div class="journey-content">
+    <!-- Introduction -->
+    <div class="lesson-card">
+      <h2>🎨 مرحباً بك في باريس!</h2>
+      <p style="font-size: 1.1rem; line-height: 1.8; color: #6b7280;">
+        باريس هي عاصمة فرنسا وواحدة من أجمل مدن العالم! تشتهر بالفن، الثقافة، الطعام الفرنسي الشهير،
+        وبرج إيفل الشامخ. في هذه الرحلة، ستتعلم كلمات إنجليزية متعلقة بالفن، الطعام، والمعالم السياحية.
+      </p>
+      <p style="font-size: 1rem; color: #db2777; margin-top: 1rem;">
+        <strong>المعلمة سارة تقول:</strong> "باريس مدينة رائعة! دعونا نتعلم كيف نتحدث عن الفن والثقافة بالإنجليزية!"
+      </p>
+    </div>
+
+    <!-- Vocabulary Section 1: Famous Landmarks -->
+    <div class="lesson-card">
+      <h2>🏛️ المعالم السياحية الشهيرة</h2>
+      <p>تعلم أسماء أشهر الأماكن في باريس</p>
+
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Eiffel Tower')">
+          <span class="vocab-emoji">🗼</span>
+          <div class="vocab-english">Eiffel Tower</div>
+          <div class="vocab-arabic">برج إيفل</div>
+          <div class="vocab-pronunciation">/ˈaɪfəl ˈtaʊər/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Louvre Museum')">
+          <span class="vocab-emoji">🖼️</span>
+          <div class="vocab-english">Louvre Museum</div>
+          <div class="vocab-arabic">متحف اللوفر</div>
+          <div class="vocab-pronunciation">/luːvr mjuːˈziːəm/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Arc de Triomphe')">
+          <span class="vocab-emoji">🏛️</span>
+          <div class="vocab-english">Arc de Triomphe</div>
+          <div class="vocab-arabic">قوس النصر</div>
+          <div class="vocab-pronunciation">/ɑːk də triˈɒmf/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Notre-Dame')">
+          <span class="vocab-emoji">⛪</span>
+          <div class="vocab-english">Notre-Dame</div>
+          <div class="vocab-arabic">كاتدرائية نوتردام</div>
+          <div class="vocab-pronunciation">/ˌnɒtrə ˈdɑːm/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Seine River')">
+          <span class="vocab-emoji">🌊</span>
+          <div class="vocab-english">Seine River</div>
+          <div class="vocab-arabic">نهر السين</div>
+          <div class="vocab-pronunciation">/seɪn ˈrɪvər/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Champs-Élysées')">
+          <span class="vocab-emoji">🛣️</span>
+          <div class="vocab-english">Champs-Élysées</div>
+          <div class="vocab-arabic">الشانزليزيه</div>
+          <div class="vocab-pronunciation">/ˌʃɒnz eɪˈliːzeɪ/</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vocabulary Section 2: French Food -->
+    <div class="lesson-card">
+      <h2>🥐 الطعام الفرنسي</h2>
+      <p>تعلم أسماء الأطعمة الفرنسية الشهيرة</p>
+
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Croissant')">
+          <span class="vocab-emoji">🥐</span>
+          <div class="vocab-english">Croissant</div>
+          <div class="vocab-arabic">كرواسون</div>
+          <div class="vocab-pronunciation">/krwɑːˈsɒn/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Baguette')">
+          <span class="vocab-emoji">🥖</span>
+          <div class="vocab-english">Baguette</div>
+          <div class="vocab-arabic">الباجيت (الخبز الفرنسي)</div>
+          <div class="vocab-pronunciation">/bæˈɡet/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Cheese')">
+          <span class="vocab-emoji">🧀</span>
+          <div class="vocab-english">Cheese</div>
+          <div class="vocab-arabic">جبن</div>
+          <div class="vocab-pronunciation">/tʃiːz/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Macaron')">
+          <span class="vocab-emoji">🍪</span>
+          <div class="vocab-english">Macaron</div>
+          <div class="vocab-arabic">ماكارون</div>
+          <div class="vocab-pronunciation">/ˈmækərɒn/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Crepe')">
+          <span class="vocab-emoji">🥞</span>
+          <div class="vocab-english">Crepe</div>
+          <div class="vocab-arabic">كريب</div>
+          <div class="vocab-pronunciation">/kreɪp/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Wine')">
+          <span class="vocab-emoji">🍷</span>
+          <div class="vocab-english">Wine</div>
+          <div class="vocab-arabic">نبيذ (للكبار)</div>
+          <div class="vocab-pronunciation">/waɪn/</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vocabulary Section 3: Art & Culture -->
+    <div class="lesson-card">
+      <h2>🎨 الفن والثقافة</h2>
+      <p>كلمات متعلقة بالفن والثقافة</p>
+
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Painting')">
+          <span class="vocab-emoji">🖼️</span>
+          <div class="vocab-english">Painting</div>
+          <div class="vocab-arabic">لوحة فنية</div>
+          <div class="vocab-pronunciation">/ˈpeɪntɪŋ/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Artist')">
+          <span class="vocab-emoji">👨‍🎨</span>
+          <div class="vocab-english">Artist</div>
+          <div class="vocab-arabic">فنان</div>
+          <div class="vocab-pronunciation">/ˈɑːrtɪst/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Museum')">
+          <span class="vocab-emoji">🏛️</span>
+          <div class="vocab-english">Museum</div>
+          <div class="vocab-arabic">متحف</div>
+          <div class="vocab-pronunciation">/mjuːˈziːəm/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Gallery')">
+          <span class="vocab-emoji">🖼️</span>
+          <div class="vocab-english">Gallery</div>
+          <div class="vocab-arabic">معرض فني</div>
+          <div class="vocab-pronunciation">/ˈɡæləri/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Culture')">
+          <span class="vocab-emoji">🎭</span>
+          <div class="vocab-english">Culture</div>
+          <div class="vocab-arabic">ثقافة</div>
+          <div class="vocab-pronunciation">/ˈkʌltʃər/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Fashion')">
+          <span class="vocab-emoji">👗</span>
+          <div class="vocab-english">Fashion</div>
+          <div class="vocab-arabic">أزياء</div>
+          <div class="vocab-pronunciation">/ˈfæʃən/</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Exercise -->
+    <div class="interactive-exercise">
+      <h2>🎯 تمرين تفاعلي</h2>
+      <p><strong>اختر الترجمة الصحيحة:</strong></p>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="font-size: 1.2rem; margin-bottom: 1rem;"><strong>1. What is "برج إيفل" in English?</strong></p>
+        <div class="exercise-option" onclick="checkAnswer(this, false)">Big Tower</div>
+        <div class="exercise-option" onclick="checkAnswer(this, true)">Eiffel Tower</div>
+        <div class="exercise-option" onclick="checkAnswer(this, false)">Paris Tower</div>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="font-size: 1.2rem; margin-bottom: 1rem;"><strong>2. What is "كرواسون" in English?</strong></p>
+        <div class="exercise-option" onclick="checkAnswer(this, false)">Bread</div>
+        <div class="exercise-option" onclick="checkAnswer(this, true)">Croissant</div>
+        <div class="exercise-option" onclick="checkAnswer(this, false)">Cake</div>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="font-size: 1.2rem; margin-bottom: 1rem;"><strong>3. What is "متحف" in English?</strong></p>
+        <div class="exercise-option" onclick="checkAnswer(this, true)">Museum</div>
+        <div class="exercise-option" onclick="checkAnswer(this, false)">Market</div>
+        <div class="exercise-option" onclick="checkAnswer(this, false)">Mall</div>
+      </div>
+    </div>
+
+    <!-- Completion Section -->
+    <div class="lesson-card" style="text-align: center;">
+      <h2>🎉 أحسنت!</h2>
+      <p>لقد أكملت رحلة باريس بنجاح!</p>
+      <button class="complete-button" onclick="completeJourney()">
+        ✅ إكمال الرحلة والحصول على النقاط
+      </button>
+      <br><br>
+      <a href="../../index.html#journeys" style="color: #db2777; text-decoration: none;">
+        ← العودة إلى الرحلات
+      </a>
+    </div>
+  </div>
+
+  <!-- JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/theme-manager.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    // Text-to-Speech for vocabulary
+    function speakWord(word) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.8;
+        window.speechSynthesis.speak(utterance);
+
+        if (window.ToastNotification) {
+          window.ToastNotification.info(`🔊 ${word}`, 1500);
+        }
+      }
+    }
+
+    // Check exercise answer
+    function checkAnswer(element, isCorrect) {
+      if (isCorrect) {
+        element.style.borderColor = '#10b981';
+        element.style.backgroundColor = '#d1fae5';
+        if (window.ToastNotification) {
+          window.ToastNotification.success('إجابة صحيحة! 🎉', 2000);
+        }
+        if (window.progressTracker) {
+          window.progressTracker.learnWord('paris-vocab');
+        }
+      } else {
+        element.style.borderColor = '#ef4444';
+        element.style.backgroundColor = '#fee2e2';
+        if (window.ToastNotification) {
+          window.ToastNotification.error('حاول مرة أخرى!', 2000);
+        }
+      }
+    }
+
+    // Complete journey
+    function completeJourney() {
+      if (window.progressTracker) {
+        window.progressTracker.completeJourney('paris', 100, Math.floor(Date.now() / 1000));
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success(
+            '🎉 تهانينا! لقد أكملت رحلة باريس!<br>+100 نقطة',
+            5000
+          );
+        }
+
+        setTimeout(() => {
+          window.location.href = '../../index.html#journeys';
+        }, 2000);
+      }
+    }
+
+    // Track page view
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>

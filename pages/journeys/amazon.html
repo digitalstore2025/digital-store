@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مغامرة في غابة الأمازون - Sky Learning ✈️</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .journey-header {
+      background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .journey-header::before {
+      content: '🌳';
+      position: absolute;
+      font-size: 15rem;
+      opacity: 0.1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .journey-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .lesson-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .vocabulary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .vocab-card {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .vocab-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .vocab-emoji {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .vocab-english {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #15803d;
+      margin-bottom: 0.3rem;
+    }
+
+    .vocab-arabic {
+      font-size: 1.1rem;
+      color: #6b7280;
+    }
+
+    .vocab-pronunciation {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      font-style: italic;
+      margin-top: 0.3rem;
+    }
+
+    .complete-button {
+      background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 2rem;
+    }
+
+    .complete-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(21, 128, 61, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <a href="../../index.html" style="text-decoration: none; color: inherit;">
+          <span class="plane-icon">✈️</span>
+          <span>Sky Learning</span>
+        </a>
+      </div>
+      <nav>
+        <a href="../../index.html">الرئيسية</a>
+        <a href="../../index.html#journeys">الرحلات</a>
+        <a href="../../index.html#games">الألعاب</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="journey-header">
+    <h1>🌳 مغامرة في غابة الأمازون</h1>
+    <p>اكتشف أكبر غابة مطيرة في العالم</p>
+  </div>
+
+  <div class="journey-content">
+    <div class="lesson-card">
+      <h2>🦜 مرحباً بك في غابة الأمازون!</h2>
+      <p style="font-size: 1.1rem; line-height: 1.8; color: #6b7280;">
+        غابة الأمازون هي أكبر غابة استوائية مطيرة في العالم! تقع في أمريكا الجنوبية وتحتوي على ملايين
+        الأنواع من النباتات والحيوانات. في هذه الرحلة، ستتعلم أسماء الحيوانات، النباتات، والطبيعة بالإنجليزية.
+      </p>
+    </div>
+
+    <!-- Animals Vocabulary -->
+    <div class="lesson-card">
+      <h2>🦁 الحيوانات</h2>
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Monkey')">
+          <span class="vocab-emoji">🐒</span>
+          <div class="vocab-english">Monkey</div>
+          <div class="vocab-arabic">قرد</div>
+          <div class="vocab-pronunciation">/ˈmʌŋki/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Parrot')">
+          <span class="vocab-emoji">🦜</span>
+          <div class="vocab-english">Parrot</div>
+          <div class="vocab-arabic">ببغاء</div>
+          <div class="vocab-pronunciation">/ˈpærət/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Jaguar')">
+          <span class="vocab-emoji">🐆</span>
+          <div class="vocab-english">Jaguar</div>
+          <div class="vocab-arabic">جاكوار (نمر أمريكي)</div>
+          <div class="vocab-pronunciation">/ˈdʒæɡwɑːr/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Snake')">
+          <span class="vocab-emoji">🐍</span>
+          <div class="vocab-english">Snake</div>
+          <div class="vocab-arabic">ثعبان</div>
+          <div class="vocab-pronunciation">/sneɪk/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Butterfly')">
+          <span class="vocab-emoji">🦋</span>
+          <div class="vocab-english">Butterfly</div>
+          <div class="vocab-arabic">فراشة</div>
+          <div class="vocab-pronunciation">/ˈbʌtərflaɪ/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Toucan')">
+          <span class="vocab-emoji">🦜</span>
+          <div class="vocab-english">Toucan</div>
+          <div class="vocab-arabic">طوقان (طائر)</div>
+          <div class="vocab-pronunciation">/ˈtuːkæn/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Sloth')">
+          <span class="vocab-emoji">🦥</span>
+          <div class="vocab-english">Sloth</div>
+          <div class="vocab-arabic">كسلان (حيوان)</div>
+          <div class="vocab-pronunciation">/sloʊθ/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Frog')">
+          <span class="vocab-emoji">🐸</span>
+          <div class="vocab-english">Frog</div>
+          <div class="vocab-arabic">ضفدع</div>
+          <div class="vocab-pronunciation">/frɑːɡ/</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plants & Nature -->
+    <div class="lesson-card">
+      <h2>🌿 النباتات والطبيعة</h2>
+      <div class="vocabulary-grid">
+        <div class="vocab-card" onclick="speakWord('Tree')">
+          <span class="vocab-emoji">🌳</span>
+          <div class="vocab-english">Tree</div>
+          <div class="vocab-arabic">شجرة</div>
+          <div class="vocab-pronunciation">/triː/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Rainforest')">
+          <span class="vocab-emoji">🌲</span>
+          <div class="vocab-english">Rainforest</div>
+          <div class="vocab-arabic">غابة مطيرة</div>
+          <div class="vocab-pronunciation">/ˈreɪnfɔːrɪst/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('River')">
+          <span class="vocab-emoji">🌊</span>
+          <div class="vocab-english">River</div>
+          <div class="vocab-arabic">نهر</div>
+          <div class="vocab-pronunciation">/ˈrɪvər/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Flower')">
+          <span class="vocab-emoji">🌺</span>
+          <div class="vocab-english">Flower</div>
+          <div class="vocab-arabic">زهرة</div>
+          <div class="vocab-pronunciation">/ˈflaʊər/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Leaf')">
+          <span class="vocab-emoji">🍃</span>
+          <div class="vocab-english">Leaf</div>
+          <div class="vocab-arabic">ورقة شجر</div>
+          <div class="vocab-pronunciation">/liːf/</div>
+        </div>
+
+        <div class="vocab-card" onclick="speakWord('Waterfall')">
+          <span class="vocab-emoji">💦</span>
+          <div class="vocab-english">Waterfall</div>
+          <div class="vocab-arabic">شلال</div>
+          <div class="vocab-pronunciation">/ˈwɔːtərfɔːl/</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion -->
+    <div class="lesson-card" style="text-align: center;">
+      <h2>🎉 أحسنت!</h2>
+      <p>لقد أكملت مغامرة غابة الأمازون!</p>
+      <button class="complete-button" onclick="completeJourney()">
+        ✅ إكمال الرحلة والحصول على النقاط
+      </button>
+      <br><br>
+      <a href="../../index.html#journeys" style="color: #15803d; text-decoration: none;">
+        ← العودة إلى الرحلات
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/theme-manager.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    function speakWord(word) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.8;
+        window.speechSynthesis.speak(utterance);
+        if (window.ToastNotification) {
+          window.ToastNotification.info(`🔊 ${word}`, 1500);
+        }
+      }
+    }
+
+    function completeJourney() {
+      if (window.progressTracker) {
+        window.progressTracker.completeJourney('amazon', 100);
+        if (window.ToastNotification) {
+          window.ToastNotification.success('🎉 تهانينا! +100 نقطة', 5000);
+        }
+        setTimeout(() => {
+          window.location.href = '../../index.html#journeys';
+        }, 2000);
+      }
+    }
+
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>

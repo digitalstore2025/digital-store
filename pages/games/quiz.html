@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار المعرفة - Sky Learning</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .game-container { max-width: 700px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .question-card { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; }
+    .question-text { font-size: 1.3rem; color: #3730a3; margin-bottom: 1.5rem; font-weight: bold; }
+    .answer-btn { background: white; border: 2px solid #e5e7eb; padding: 1rem; margin: 0.5rem 0; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; display: block; width: 100%; text-align: right; }
+    .answer-btn:hover { border-color: #6366f1; transform: translateX(-5px); }
+    .answer-btn.correct { background: #d1fae5; border-color: #10b981; }
+    .answer-btn.wrong { background: #fee2e2; border-color: #ef4444; }
+    .progress-bar { height: 10px; background: #e5e7eb; border-radius: 10px; overflow: hidden; margin-bottom: 2rem; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%); transition: width 0.3s ease; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#games">الألعاب</a></nav>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <h1 style="text-align: center;">❓ اختبار المعرفة</h1>
+    <p style="text-align: center; color: #6b7280;">اختبر ما تعلمته!</p>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width: 0%"></div></div>
+
+    <div style="text-align: center; margin-bottom: 1rem;">
+      <span style="background: #f3f4f6; padding: 0.5rem 1rem; border-radius: 20px;">
+        السؤال <strong id="currentQ">1</strong> من <strong id="totalQ">10</strong>
+      </span>
+      <span style="background: #fef3c7; padding: 0.5rem 1rem; border-radius: 20px; margin-right: 1rem;">
+        النقاط: <strong id="score">0</strong>
+      </span>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="../../index.html#games" style="color: #6366f1;">← العودة</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    const questions = [
+      {q: 'ما معنى "Hello"؟', answers: ['مرحبا', 'شكرا', 'وداعا', 'صباح الخير'], correct: 0},
+      {q: 'ما معنى "Cat"؟', answers: ['كلب', 'قطة', 'أرنب', 'طائر'], correct: 1},
+      {q: 'ما معنى "Thank you"؟', answers: ['من فضلك', 'شكرا', 'آسف', 'مرحبا'], correct: 1},
+      {q: 'ما معنى "Apple"؟', answers: ['موز', 'برتقال', 'تفاحة', 'عنب'], correct: 2},
+      {q: 'ما معنى "School"؟', answers: ['بيت', 'مدرسة', 'حديقة', 'متحف'], correct: 1},
+      {q: 'ما معنى "Sun"؟', answers: ['قمر', 'نجمة', 'شمس', 'سحابة'], correct: 2},
+      {q: 'ما معنى "Water"؟', answers: ['ماء', 'حليب', 'عصير', 'شاي'], correct: 0},
+      {q: 'ما معنى "Book"؟', answers: ['قلم', 'كتاب', 'دفتر', 'ورقة'], correct: 1},
+      {q: 'ما معنى "Friend"؟', answers: ['عائلة', 'صديق', 'أخ', 'معلم'], correct: 1},
+      {q: 'ما معنى "Happy"؟', answers: ['حزين', 'غاضب', 'سعيد', 'خائف'], correct: 2}
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = false;
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        showResults();
+        return;
+      }
+
+      answered = false;
+      const q = questions[currentQuestion];
+      const container = document.getElementById('quizContainer');
+
+      container.innerHTML = `
+        <div class="question-card">
+          <div class="question-text">${q.q}</div>
+          ${q.answers.map((ans, i) => `
+            <button class="answer-btn" onclick="checkAnswer(${i})">${ans}</button>
+          `).join('')}
+        </div>
+      `;
+
+      document.getElementById('currentQ').textContent = currentQuestion + 1;
+      document.getElementById('totalQ').textContent = questions.length;
+      document.getElementById('progressBar').style.width = ((currentQuestion / questions.length) * 100) + '%';
+    }
+
+    function checkAnswer(index) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentQuestion];
+      const btns = document.querySelectorAll('.answer-btn');
+
+      if (index === q.correct) {
+        btns[index].classList.add('correct');
+        score += 10;
+        document.getElementById('score').textContent = score;
+        if (window.ToastNotification) {
+          window.ToastNotification.success('إجابة صحيحة! 🎉 +10', 1500);
+        }
+      } else {
+        btns[index].classList.add('wrong');
+        btns[q.correct].classList.add('correct');
+        if (window.ToastNotification) {
+          window.ToastNotification.error('حاول مرة أخرى!', 1500);
+        }
+      }
+
+      setTimeout(() => {
+        currentQuestion++;
+        showQuestion();
+      }, 2000);
+    }
+
+    function showResults() {
+      const percentage = (score / (questions.length * 10)) * 100;
+      const container = document.getElementById('quizContainer');
+
+      container.innerHTML = `
+        <div class="question-card" style="text-align: center;">
+          <h2 style="color: #3730a3; margin-bottom: 1rem;">🎊 النتيجة النهائية</h2>
+          <div style="font-size: 3rem; margin: 2rem 0;">${percentage.toFixed(0)}%</div>
+          <p style="font-size: 1.2rem; color: #6b7280;">
+            لقد حصلت على <strong>${score}</strong> من <strong>${questions.length * 10}</strong> نقطة!
+          </p>
+          <button onclick="location.reload()" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; margin-top: 2rem;">
+            🔄 إعادة الاختبار
+          </button>
+        </div>
+      `;
+
+      if (window.progressTracker) {
+        window.progressTracker.completeGame('quiz', score, percentage >= 70);
+      }
+
+      if (percentage >= 70 && window.ToastNotification) {
+        window.ToastNotification.success('نجاح باهر! 🎊', 3000);
+      }
+    }
+
+    showQuestion();
+
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>

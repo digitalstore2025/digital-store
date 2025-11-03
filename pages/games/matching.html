@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة التوصيل - Sky Learning</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .game-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+    .card { aspect-ratio: 1; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: all 0.3s ease; position: relative; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); }
+    .card.flipped { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+    .card.matched { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .card-front { display: none; }
+    .card.flipped .card-front, .card.matched .card-front { display: block; }
+    .card.flipped .card-back, .card.matched .card-back { display: none; }
+    .score { text-align: center; padding: 1rem; background: #f3f4f6; border-radius: 10px; margin-bottom: 2rem; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#games">الألعاب</a></nav>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <h1 style="text-align: center;">🃏 لعبة التوصيل</h1>
+    <p style="text-align: center; color: #6b7280;">اقلب الكروت وطابق الأزواج!</p>
+
+    <div class="score">
+      <span>المحاولات: <strong id="moves">0</strong></span> |
+      <span>الأزواج: <strong id="pairs">0</strong>/6</span>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <button onclick="resetGame()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 50px; cursor: pointer;">🔄 لعب مرة أخرى</button>
+      <br><br>
+      <a href="../../index.html#games" style="color: #6366f1;">← العودة</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    const pairs = [
+      {english: 'Hello', arabic: 'مرحبا'},
+      {english: 'Thank you', arabic: 'شكرا'},
+      {english: 'Goodbye', arabic: 'وداعا'},
+      {english: 'Friend', arabic: 'صديق'},
+      {english: 'Family', arabic: 'عائلة'},
+      {english: 'School', arabic: 'مدرسة'}
+    ];
+
+    let cards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let moves = 0;
+
+    function initGame() {
+      matchedPairs = 0;
+      moves = 0;
+      flippedCards = [];
+      updateScore();
+
+      // Create card array
+      cards = [];
+      pairs.forEach(pair => {
+        cards.push({type: 'english', value: pair.english, pair: pair.arabic});
+        cards.push({type: 'arabic', value: pair.arabic, pair: pair.english});
+      });
+
+      // Shuffle
+      cards.sort(() => Math.random() - 0.5);
+
+      // Render cards
+      const grid = document.getElementById('cardsGrid');
+      grid.innerHTML = '';
+      cards.forEach((card, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
+        cardDiv.dataset.index = index;
+        cardDiv.innerHTML = `
+          <div class="card-back">?</div>
+          <div class="card-front">${card.value}</div>
+        `;
+        cardDiv.addEventListener('click', () => flipCard(index));
+        grid.appendChild(cardDiv);
+      });
+    }
+
+    function flipCard(index) {
+      const cardElements = document.querySelectorAll('.card');
+      const card = cardElements[index];
+
+      if (flippedCards.length >= 2 || card.classList.contains('matched') || card.classList.contains('flipped')) {
+        return;
+      }
+
+      card.classList.add('flipped');
+      flippedCards.push({index, card: cards[index], element: card});
+
+      if (flippedCards.length === 2) {
+        moves++;
+        updateScore();
+        setTimeout(checkMatch, 800);
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+
+      if (card1.card.value === card2.card.pair) {
+        // Match!
+        card1.element.classList.remove('flipped');
+        card2.element.classList.remove('flipped');
+        card1.element.classList.add('matched');
+        card2.element.classList.add('matched');
+        matchedPairs++;
+        updateScore();
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success('مطابقة! 🎉', 1500);
+        }
+
+        if (matchedPairs === pairs.length) {
+          setTimeout(gameComplete, 500);
+        }
+      } else {
+        // No match
+        card1.element.classList.remove('flipped');
+        card2.element.classList.remove('flipped');
+      }
+
+      flippedCards = [];
+    }
+
+    function updateScore() {
+      document.getElementById('moves').textContent = moves;
+      document.getElementById('pairs').textContent = matchedPairs;
+    }
+
+    function gameComplete() {
+      const score = Math.max(0, 100 - (moves - pairs.length) * 5);
+      if (window.ToastNotification) {
+        window.ToastNotification.success(`🎊 رائع! أكملت اللعبة!<br>المحاولات: ${moves}<br>النقاط: ${score}`, 5000);
+      }
+      if (window.progressTracker) {
+        window.progressTracker.completeGame('matching', score, moves <= pairs.length + 3);
+      }
+    }
+
+    function resetGame() {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped', 'matched'));
+      initGame();
+    }
+
+    initGame();
+
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>
