@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة النطق - Sky Learning</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .game-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .game-header { text-align: center; margin-bottom: 2rem; }
+    .word-display { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; padding: 3rem; border-radius: 20px; text-align: center; margin: 2rem 0; position: relative; overflow: hidden; }
+    .word-display::before { content: '🎤'; position: absolute; font-size: 15rem; opacity: 0.1; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .word-english { font-size: 3rem; font-weight: bold; margin-bottom: 1rem; position: relative; z-index: 1; }
+    .word-arabic { font-size: 1.5rem; opacity: 0.9; position: relative; z-index: 1; }
+    .word-pronunciation { font-size: 1.2rem; font-style: italic; opacity: 0.8; margin-top: 0.5rem; position: relative; z-index: 1; }
+    .control-panel { display: flex; gap: 1rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap; }
+    .btn { padding: 1rem 2rem; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: all 0.3s ease; }
+    .btn-primary { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3); }
+    .btn-secondary { background: white; color: #ec4899; border: 2px solid #ec4899; }
+    .btn-secondary:hover { background: #fdf2f8; }
+    .progress-bar { background: #f3f4f6; height: 12px; border-radius: 10px; overflow: hidden; margin: 2rem 0; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #ec4899 0%, #db2777 100%); transition: width 0.3s ease; }
+    .score-display { text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 15px; margin: 2rem 0; }
+    .score-value { font-size: 2rem; font-weight: bold; color: #92400e; }
+    .mic-status { text-align: center; padding: 1rem; border-radius: 10px; margin: 1rem 0; font-weight: bold; }
+    .mic-status.listening { background: #d1fae5; color: #065f46; animation: pulse 1.5s infinite; }
+    .mic-status.error { background: #fee2e2; color: #991b1b; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    .instructions { background: #f0f9ff; padding: 1.5rem; border-radius: 15px; border-right: 4px solid #0284c7; margin: 2rem 0; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#games">الألعاب</a></nav>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🎤 لعبة النطق</h1>
+      <p>استمع للكلمة وحاول نطقها بشكل صحيح!</p>
+    </div>
+
+    <div class="instructions" id="instructions">
+      <h3 style="color: #0369a1; margin-bottom: 0.5rem;">📝 كيف تلعب:</h3>
+      <ol style="color: #075985; line-height: 1.8;">
+        <li>اضغط على "استمع للكلمة" لسماع النطق الصحيح</li>
+        <li>اضغط على "ابدأ النطق" وانطق الكلمة بوضوح</li>
+        <li>سيتم تقييم نطقك تلقائياً</li>
+        <li>اجمع النقاط وانتقل للكلمة التالية!</li>
+      </ol>
+    </div>
+
+    <div class="score-display">
+      <span>النقاط: </span>
+      <span class="score-value" id="scoreValue">0</span>
+      <span style="margin-right: 2rem;">الكلمات المكتملة: </span>
+      <span class="score-value" id="completedValue">0</span>/10
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    <div class="word-display" id="wordDisplay">
+      <div class="word-english" id="wordEnglish">Hello</div>
+      <div class="word-arabic" id="wordArabic">مرحبا</div>
+      <div class="word-pronunciation" id="wordPronunciation">/həˈloʊ/</div>
+    </div>
+
+    <div id="micStatus" style="display: none;"></div>
+
+    <div class="control-panel">
+      <button class="btn btn-primary" onclick="speakWord()">
+        🔊 استمع للكلمة
+      </button>
+      <button class="btn btn-secondary" onclick="startListening()" id="listenBtn">
+        🎤 ابدأ النطق
+      </button>
+      <button class="btn btn-secondary" onclick="skipWord()">
+        ⏭️ تخطي
+      </button>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+      <button onclick="resetGame()" class="btn btn-secondary">🔄 لعبة جديدة</button>
+      <br><br>
+      <a href="../../index.html#games" style="color: #ec4899;">← العودة للألعاب</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    const words = [
+      {english: 'Hello', arabic: 'مرحبا', pronunciation: '/həˈloʊ/'},
+      {english: 'Thank you', arabic: 'شكراً', pronunciation: '/θæŋk juː/'},
+      {english: 'Goodbye', arabic: 'وداعاً', pronunciation: '/ɡʊdˈbaɪ/'},
+      {english: 'Cat', arabic: 'قطة', pronunciation: '/kæt/'},
+      {english: 'Dog', arabic: 'كلب', pronunciation: '/dɔːɡ/'},
+      {english: 'Apple', arabic: 'تفاحة', pronunciation: '/ˈæpəl/'},
+      {english: 'Water', arabic: 'ماء', pronunciation: '/ˈwɔːtər/'},
+      {english: 'Book', arabic: 'كتاب', pronunciation: '/bʊk/'},
+      {english: 'Friend', arabic: 'صديق', pronunciation: '/frend/'},
+      {english: 'Happy', arabic: 'سعيد', pronunciation: '/ˈhæpi/'}
+    ];
+
+    let currentWordIndex = 0;
+    let score = 0;
+    let completed = 0;
+    let recognition = null;
+
+    // Check for speech recognition support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const speechSupported = !!SpeechRecognition;
+
+    if (speechSupported) {
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        showMicStatus('listening', '🎤 استمع... انطق الكلمة الآن!');
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        const confidence = event.results[0][0].confidence;
+        checkPronunciation(transcript, confidence);
+      };
+
+      recognition.onerror = (event) => {
+        showMicStatus('error', '❌ حدث خطأ. حاول مرة أخرى!');
+        console.error('Speech recognition error:', event.error);
+      };
+
+      recognition.onend = () => {
+        hideMicStatus();
+      };
+    } else {
+      document.getElementById('instructions').innerHTML = `
+        <h3 style="color: #991b1b;">⚠️ متصفحك لا يدعم التعرف على الصوت</h3>
+        <p style="color: #dc2626;">يرجى استخدام متصفح Chrome أو Edge للاستفادة من هذه اللعبة.</p>
+        <p style="color: #6b7280;">يمكنك الاستماع للكلمات والتدرب على النطق بنفسك!</p>
+      `;
+      document.getElementById('listenBtn').disabled = true;
+      document.getElementById('listenBtn').style.opacity = '0.5';
+    }
+
+    function showWord() {
+      const word = words[currentWordIndex];
+      document.getElementById('wordEnglish').textContent = word.english;
+      document.getElementById('wordArabic').textContent = word.arabic;
+      document.getElementById('wordPronunciation').textContent = word.pronunciation;
+      document.getElementById('progressBar').style.width = ((currentWordIndex / words.length) * 100) + '%';
+    }
+
+    function speakWord() {
+      if ('speechSynthesis' in window) {
+        const word = words[currentWordIndex];
+        const utterance = new SpeechSynthesisUtterance(word.english);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.7;
+        window.speechSynthesis.speak(utterance);
+
+        if (window.ToastNotification) {
+          window.ToastNotification.info(`🔊 ${word.english}`, 1500);
+        }
+      }
+    }
+
+    function startListening() {
+      if (!speechSupported) {
+        if (window.ToastNotification) {
+          window.ToastNotification.error('متصفحك لا يدعم التعرف على الصوت', 3000);
+        }
+        return;
+      }
+
+      try {
+        recognition.start();
+      } catch (error) {
+        console.error('Error starting recognition:', error);
+      }
+    }
+
+    function checkPronunciation(transcript, confidence) {
+      const currentWord = words[currentWordIndex].english.toLowerCase();
+      const isCorrect = transcript.includes(currentWord) || currentWord.includes(transcript);
+
+      if (isCorrect) {
+        const points = Math.round(confidence * 100);
+        score += points;
+        completed++;
+        updateScore();
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success(
+            `ممتاز! 🎉<br>نطق صحيح!<br>+${points} نقطة`,
+            3000
+          );
+        }
+
+        setTimeout(nextWord, 1500);
+      } else {
+        if (window.ToastNotification) {
+          window.ToastNotification.error(
+            `حاول مرة أخرى!<br>سمعت: "${transcript}"<br>الكلمة الصحيحة: "${currentWord}"`,
+            3000
+          );
+        }
+      }
+    }
+
+    function skipWord() {
+      if (window.ToastNotification) {
+        window.ToastNotification.info('تم التخطي ⏭️', 1500);
+      }
+      nextWord();
+    }
+
+    function nextWord() {
+      currentWordIndex++;
+      if (currentWordIndex >= words.length) {
+        gameComplete();
+      } else {
+        showWord();
+      }
+    }
+
+    function updateScore() {
+      document.getElementById('scoreValue').textContent = score;
+      document.getElementById('completedValue').textContent = completed;
+    }
+
+    function showMicStatus(type, message) {
+      const status = document.getElementById('micStatus');
+      status.className = `mic-status ${type}`;
+      status.textContent = message;
+      status.style.display = 'block';
+    }
+
+    function hideMicStatus() {
+      setTimeout(() => {
+        document.getElementById('micStatus').style.display = 'none';
+      }, 1000);
+    }
+
+    function gameComplete() {
+      if (window.ToastNotification) {
+        window.ToastNotification.success(
+          `🎊 رائع! لقد أكملت اللعبة!<br>النقاط النهائية: ${score}<br>الكلمات الصحيحة: ${completed}/${words.length}`,
+          6000
+        );
+      }
+
+      if (window.progressTracker) {
+        window.progressTracker.completeGame('pronunciation', score, completed === words.length);
+      }
+
+      if (window.Analytics) {
+        window.Analytics.trackEvent('Game', 'complete', 'pronunciation', score);
+      }
+
+      setTimeout(() => {
+        document.getElementById('wordDisplay').innerHTML = `
+          <div style="position: relative; z-index: 1;">
+            <h2 style="margin-bottom: 1rem;">🏆 النتيجة النهائية</h2>
+            <p style="font-size: 2rem; margin: 1rem 0;">${score} نقطة</p>
+            <p style="font-size: 1.2rem;">نطقت ${completed} من ${words.length} كلمة بشكل صحيح!</p>
+          </div>
+        `;
+      }, 500);
+    }
+
+    function resetGame() {
+      currentWordIndex = 0;
+      score = 0;
+      completed = 0;
+      updateScore();
+      showWord();
+    }
+
+    // Initialize
+    showWord();
+    updateScore();
+
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>

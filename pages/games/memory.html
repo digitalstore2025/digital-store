@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة الذاكرة - Sky Learning</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/enhancements.css">
+  <style>
+    .game-container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .game-header { text-align: center; margin-bottom: 2rem; }
+    .stats { display: flex; justify-content: space-around; padding: 1.5rem; background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-radius: 15px; margin-bottom: 2rem; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; color: #7c3aed; display: block; }
+    .stat-label { color: #6b7280; font-size: 0.9rem; }
+    .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; perspective: 1000px; }
+    .memory-card { aspect-ratio: 1; background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%); border-radius: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; position: relative; transform-style: preserve-3d; transition: transform 0.6s; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3); }
+    .memory-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5); }
+    .memory-card.flipped { transform: rotateY(180deg); }
+    .memory-card.matched { background: linear-gradient(135deg, #10b981 0%, #059669 100%); animation: matchPulse 0.5s ease; }
+    @keyframes matchPulse { 0%, 100% { transform: scale(1) rotateY(180deg); } 50% { transform: scale(1.1) rotateY(180deg); } }
+    .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 15px; }
+    .card-front { background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%); }
+    .card-back { background: white; transform: rotateY(180deg); color: #1f2937; font-weight: bold; font-size: 1.2rem; padding: 1rem; text-align: center; }
+    .timer { font-size: 2.5rem; font-weight: bold; color: #7c3aed; font-family: 'Courier New', monospace; }
+    .level-selector { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+    .level-btn { padding: 0.75rem 1.5rem; border: 2px solid #e5e7eb; background: white; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
+    .level-btn.active { background: linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%); color: white; border-color: #7c3aed; }
+    .level-btn:hover { border-color: #7c3aed; }
+  </style>
+</head>
+<body>
+  <div class="sky-background"></div>
+  <header>
+    <div class="header-content">
+      <div class="logo"><a href="../../index.html" style="text-decoration: none; color: inherit;"><span class="plane-icon">✈️</span><span>Sky Learning</span></a></div>
+      <nav><a href="../../index.html">الرئيسية</a><a href="../../index.html#games">الألعاب</a></nav>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="game-header">
+      <h1>🧠 لعبة الذاكرة</h1>
+      <p>اقلب البطاقات وطابق الكلمات الإنجليزية بترجمتها العربية!</p>
+    </div>
+
+    <div class="level-selector">
+      <button class="level-btn active" onclick="setLevel('easy')" id="easyBtn">
+        سهل (8 بطاقات)
+      </button>
+      <button class="level-btn" onclick="setLevel('medium')" id="mediumBtn">
+        متوسط (12 بطاقة)
+      </button>
+      <button class="level-btn" onclick="setLevel('hard')" id="hardBtn">
+        صعب (16 بطاقة)
+      </button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-value" id="timeValue">00:00</span>
+        <span class="stat-label">الوقت</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="movesValue">0</span>
+        <span class="stat-label">المحاولات</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="matchesValue">0</span>
+        <span class="stat-label">المطابقات</span>
+      </div>
+    </div>
+
+    <div class="memory-grid" id="memoryGrid"></div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <button onclick="resetGame()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; font-size: 1rem; margin-left: 1rem;">🔄 لعبة جديدة</button>
+      <br><br>
+      <a href="../../index.html#games" style="color: #7c3aed;">← العودة للألعاب</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/analytics.js"></script>
+  <script src="../../assets/js/achievements.js"></script>
+  <script src="../../assets/js/app.js"></script>
+
+  <script>
+    const wordPairs = {
+      easy: [
+        {english: 'Cat', arabic: 'قطة'},
+        {english: 'Dog', arabic: 'كلب'},
+        {english: 'Sun', arabic: 'شمس'},
+        {english: 'Moon', arabic: 'قمر'}
+      ],
+      medium: [
+        {english: 'Cat', arabic: 'قطة'},
+        {english: 'Dog', arabic: 'كلب'},
+        {english: 'Sun', arabic: 'شمس'},
+        {english: 'Moon', arabic: 'قمر'},
+        {english: 'Tree', arabic: 'شجرة'},
+        {english: 'Book', arabic: 'كتاب'}
+      ],
+      hard: [
+        {english: 'Cat', arabic: 'قطة'},
+        {english: 'Dog', arabic: 'كلب'},
+        {english: 'Sun', arabic: 'شمس'},
+        {english: 'Moon', arabic: 'قمر'},
+        {english: 'Tree', arabic: 'شجرة'},
+        {english: 'Book', arabic: 'كتاب'},
+        {english: 'Water', arabic: 'ماء'},
+        {english: 'House', arabic: 'بيت'}
+      ]
+    };
+
+    let currentLevel = 'easy';
+    let cards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let moves = 0;
+    let timer = 0;
+    let timerInterval = null;
+    let gameStarted = false;
+
+    function setLevel(level) {
+      currentLevel = level;
+      document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(level + 'Btn').classList.add('active');
+      resetGame();
+    }
+
+    function initGame() {
+      const pairs = wordPairs[currentLevel];
+      matchedPairs = 0;
+      moves = 0;
+      timer = 0;
+      flippedCards = [];
+      gameStarted = false;
+
+      if (timerInterval) clearInterval(timerInterval);
+      updateStats();
+
+      // Create card array
+      cards = [];
+      pairs.forEach(pair => {
+        cards.push({type: 'english', value: pair.english, match: pair.arabic});
+        cards.push({type: 'arabic', value: pair.arabic, match: pair.english});
+      });
+
+      // Shuffle
+      cards.sort(() => Math.random() - 0.5);
+
+      // Update grid columns based on level
+      const grid = document.getElementById('memoryGrid');
+      if (currentLevel === 'easy') grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      else if (currentLevel === 'medium') grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      else grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+
+      // Render cards
+      grid.innerHTML = '';
+      cards.forEach((card, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'memory-card';
+        cardDiv.dataset.index = index;
+        cardDiv.innerHTML = `
+          <div class="card-face card-front">❓</div>
+          <div class="card-face card-back">${card.value}</div>
+        `;
+        cardDiv.addEventListener('click', () => flipCard(index));
+        grid.appendChild(cardDiv);
+      });
+    }
+
+    function flipCard(index) {
+      if (!gameStarted) {
+        gameStarted = true;
+        startTimer();
+      }
+
+      const cardElements = document.querySelectorAll('.memory-card');
+      const card = cardElements[index];
+
+      if (flippedCards.length >= 2 ||
+          card.classList.contains('matched') ||
+          card.classList.contains('flipped') ||
+          flippedCards.some(c => c.index === index)) {
+        return;
+      }
+
+      card.classList.add('flipped');
+      flippedCards.push({index, card: cards[index], element: card});
+
+      if (flippedCards.length === 2) {
+        moves++;
+        updateStats();
+        setTimeout(checkMatch, 1000);
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+
+      if (card1.card.value === card2.card.match || card2.card.value === card1.card.match) {
+        // Match!
+        card1.element.classList.remove('flipped');
+        card2.element.classList.remove('flipped');
+        card1.element.classList.add('matched');
+        card2.element.classList.add('matched');
+        matchedPairs++;
+        updateStats();
+
+        if (window.ToastNotification) {
+          window.ToastNotification.success('مطابقة رائعة! 🎉', 1500);
+        }
+
+        if (matchedPairs === wordPairs[currentLevel].length) {
+          setTimeout(gameComplete, 500);
+        }
+      } else {
+        // No match
+        setTimeout(() => {
+          card1.element.classList.remove('flipped');
+          card2.element.classList.remove('flipped');
+        }, 200);
+      }
+
+      flippedCards = [];
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timer++;
+        updateStats();
+      }, 1000);
+    }
+
+    function updateStats() {
+      const minutes = Math.floor(timer / 60);
+      const seconds = timer % 60;
+      document.getElementById('timeValue').textContent =
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      document.getElementById('movesValue').textContent = moves;
+      document.getElementById('matchesValue').textContent = matchedPairs;
+    }
+
+    function gameComplete() {
+      clearInterval(timerInterval);
+
+      const perfectMoves = wordPairs[currentLevel].length;
+      const score = Math.max(0, 100 - (moves - perfectMoves) * 3 - Math.floor(timer / 5));
+
+      let stars = '⭐⭐⭐';
+      if (score >= 90) stars = '⭐⭐⭐';
+      else if (score >= 70) stars = '⭐⭐';
+      else stars = '⭐';
+
+      if (window.ToastNotification) {
+        window.ToastNotification.success(
+          `🎊 أحسنت! ${stars}<br>الوقت: ${Math.floor(timer/60)}:${(timer%60).toString().padStart(2,'0')}<br>المحاولات: ${moves}<br>النقاط: ${score}`,
+          6000
+        );
+      }
+
+      if (window.progressTracker) {
+        window.progressTracker.completeGame('memory', score, moves <= perfectMoves + 3);
+      }
+
+      if (window.Analytics) {
+        window.Analytics.trackEvent('Game', 'complete', `memory-${currentLevel}`, score);
+      }
+    }
+
+    function resetGame() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.querySelectorAll('.memory-card').forEach(c => {
+        c.classList.remove('flipped', 'matched');
+      });
+      initGame();
+    }
+
+    initGame();
+
+    if (window.Analytics) {
+      window.Analytics.trackPageView();
+    }
+  </script>
+</body>
+</html>
