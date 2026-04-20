@@ -6,13 +6,25 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
 });
 
-export async function POST() {
+const plans = {
+  starter: { name: "Starter Plan", amount: 700, usageLimit: 20 },
+  pro: { name: "Pro Plan", amount: 2900, usageLimit: 200 },
+};
+
+export async function POST(req: Request) {
   try {
     const { userId } = auth();
     const user = await currentUser();
 
     if (!userId || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { plan = "starter" } = await req.json();
+    const selectedPlan = plans[plan as keyof typeof plans];
+
+    if (!selectedPlan) {
+      return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
     const email = user.emailAddresses?.[0]?.emailAddress;
@@ -24,15 +36,17 @@ export async function POST() {
       metadata: {
         clerkUserId: userId,
         userEmail: email || "",
+        plan,
+        usageLimit: String(selectedPlan.usageLimit),
       },
       line_items: [
         {
           price_data: {
             currency: "usd",
             product_data: {
-              name: "AI SaaS Access",
+              name: selectedPlan.name,
             },
-            unit_amount: 700,
+            unit_amount: selectedPlan.amount,
           },
           quantity: 1,
         },
