@@ -1,36 +1,48 @@
+"use client";
+
+import { useState } from "react";
 import { auth } from "@clerk/nextjs/server";
-import { prisma } from "@/lib/db";
 
-export default async function Dashboard() {
-  const { userId } = auth();
+export default function Dashboard() {
+  const [prompt, setPrompt] = useState("");
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  if (!userId) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-deep-space text-white">
-        <h1 className="text-2xl">يجب تسجيل الدخول أولاً 🔐</h1>
-      </div>
-    );
-  }
+  const handleGenerate = async () => {
+    setLoading(true);
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    });
 
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-  });
-
-  if (!user?.isPaid) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-deep-space text-white text-center px-6">
-        <div>
-          <h1 className="text-2xl font-bold mb-4">يجب شراء الخطة للوصول 🔒</h1>
-          <p className="text-gray-400">تم تسجيل دخولك، لكن الحساب لا يملك وصولاً مدفوعًا بعد.</p>
-        </div>
-      </div>
-    );
-  }
+    const data = await res.json();
+    setResult(data.result || data.error);
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-deep-space text-white p-10">
-      <h1 className="text-3xl font-bold mb-4">لوحة التحكم (مدفوعة)</h1>
-      <p className="text-gray-400">أصبح الوصول الآن مبنيًا على الدفع الحقيقي المحفوظ في قاعدة البيانات.</p>
+      <h1 className="text-3xl font-bold mb-6">منصة توليد المحتوى</h1>
+
+      <textarea
+        className="w-full p-4 rounded bg-black/40 border border-white/10 mb-4"
+        placeholder="اكتب طلبك (مثال: اكتب إعلان لمنتج رقمي)..."
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+      />
+
+      <button
+        onClick={handleGenerate}
+        className="bg-neon-cyan text-black px-6 py-3 rounded font-bold"
+      >
+        {loading ? "جاري التوليد..." : "توليد المحتوى"}
+      </button>
+
+      {result && (
+        <div className="mt-6 p-4 bg-white/5 rounded whitespace-pre-wrap">
+          {result}
+        </div>
+      )}
     </div>
   );
 }
