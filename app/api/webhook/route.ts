@@ -28,15 +28,22 @@ export async function POST(req: Request) {
 
     const clerkUserId = session.metadata?.clerkUserId;
     const email = session.metadata?.userEmail;
+    const usageLimit = Number(session.metadata?.usageLimit || 20);
 
     if (clerkUserId && email) {
       await prisma.user.upsert({
         where: { clerkId: clerkUserId },
-        update: { isPaid: true },
+        update: {
+          isPaid: true,
+          usageLimit,
+          usageCount: 0,
+        },
         create: {
           clerkId: clerkUserId,
           email,
           isPaid: true,
+          usageLimit,
+          usageCount: 0,
         },
       });
     }
