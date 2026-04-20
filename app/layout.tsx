@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Tajawal } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const tajawal = Tajawal({
@@ -20,12 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar" dir="rtl">
-      <body
-        className={`${tajawal.className} bg-deep-space text-white antialiased overflow-x-hidden`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="ar" dir="rtl">
+        <body
+          className={`${tajawal.className} bg-deep-space text-white antialiased overflow-x-hidden`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
