@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
+import { prisma } from "@/lib/db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -28,12 +29,17 @@ export async function POST(req: Request) {
     const clerkUserId = session.metadata?.clerkUserId;
     const email = session.metadata?.userEmail;
 
-    console.log("Payment confirmed for:", {
-      clerkUserId,
-      email,
-    });
-
-    // هنا يجب ربط المستخدم بقاعدة بيانات (خطوة لاحقة)
+    if (clerkUserId && email) {
+      await prisma.user.upsert({
+        where: { clerkId: clerkUserId },
+        update: { isPaid: true },
+        create: {
+          clerkId: clerkUserId,
+          email,
+          isPaid: true,
+        },
+      });
+    }
   }
 
   return NextResponse.json({ received: true });
