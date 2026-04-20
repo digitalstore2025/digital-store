@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -7,9 +8,23 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST() {
   try {
+    const { userId } = auth();
+    const user = await currentUser();
+
+    if (!userId || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const email = user.emailAddresses?.[0]?.emailAddress;
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
+      customer_email: email,
+      metadata: {
+        clerkUserId: userId,
+        userEmail: email || "",
+      },
       line_items: [
         {
           price_data: {
@@ -17,7 +32,7 @@ export async function POST() {
             product_data: {
               name: "AI SaaS Access",
             },
-            unit_amount: 700, // $7
+            unit_amount: 700,
           },
           quantity: 1,
         },
