@@ -23,8 +23,17 @@ export async function POST(req: Request) {
   }
 
   if (event.type === "checkout.session.completed") {
-    // هنا مكان ربط المستخدم (مؤقت بدون DB)
-    console.log("Payment confirmed");
+    const session = event.data.object as Stripe.Checkout.Session;
+
+    const clerkUserId = session.metadata?.clerkUserId;
+    const email = session.metadata?.userEmail;
+
+    console.log("Payment confirmed for:", {
+      clerkUserId,
+      email,
+    });
+
+    // هنا يجب ربط المستخدم بقاعدة بيانات (خطوة لاحقة)
   }
 
   return NextResponse.json({ received: true });
